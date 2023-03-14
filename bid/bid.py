@@ -48,7 +48,38 @@ def create_bid():
     newBid = request.json
     newBid["date"] = datetime.now(timezone.utc).astimezone()
 
+    highest_price = db.collection("bid").where("listing_id", "==", newBid["listing_id"]).order_by('bid_price', direction=firestore.Query.DESCENDING).limit(1).get()
+
+    if len(highest_price):
+        highest_price = highest_price[0].to_dict()["bid_price"]
+        if 0.01 <= highest_price and highest_price < 1:
+            bid_increment = 0.05
+        elif 1 <= highest_price and highest_price < 5:
+            bid_increment = 0.25
+        elif 5 <= highest_price and highest_price < 25:
+            bid_increment = 0.50
+        elif 25 <= highest_price and highest_price < 100:
+            bid_increment = 1
+        elif 100 <= highest_price and highest_price < 250:
+            bid_increment = 2.5
+        elif 250 <= highest_price and highest_price < 500:
+            bid_increment = 5
+        elif 500 <= highest_price and highest_price < 1000:
+            bid_increment = 10
+        elif 1000 <= highest_price and highest_price < 2500:
+            bid_increment = 25
+        elif 2500 <= highest_price and highest_price < 5000:
+            bid_increment = 50
+        elif highest_price >= 5000:
+            bid_increment = 100
+    else:
+        highest_price = 0
+        bid_increment = 0
+
     try:
+        if newBid["bid_price"]-highest_price < bid_increment:
+            raise Exception(f"Minimum bid increment is ${'{:.2f}'.format(bid_increment)}.")
+        
         doc_ref = db.collection("bid").document()
         doc_ref.set(newBid)
     except Exception as e:
@@ -70,7 +101,7 @@ def create_bid():
     ), 201
 
 
-@app.route("/bid/<int:user_id>", methods=['GET'])
+@app.route("/bid/user/<int:user_id>", methods=['GET'])
 def get_user_bids(user_id):
     query = db.collection("bid").where("user_id", "==", user_id)
 
