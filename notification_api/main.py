@@ -51,7 +51,7 @@ def notify_new_listing():
 
         # print(response.status_code, response.body)
         # print(response)
-        
+
         return jsonify(
             {
                 "code": 200,
@@ -67,6 +67,102 @@ def notify_new_listing():
     ), 400
 
     # return if no data or missing data 
+
+
+@app.route('/notify_bidsuccess', methods=['POST'])
+def notify_bidsuccess() :
+    # seller_data = request.get_json()
+
+    bid_data = {
+        "username" : "lesbuyer",
+        "listing_name" : "ball",
+        "listing_description" : "stripes",
+        "bid_price" : 3100,
+        "bid_datetime" : 1647213165,
+        "auction_end": 1647213166,
+        "bid_count" : 1,
+    }
+    #bid count to count number of bidder
+    
+    # check if data needed is available 
+    if bid_data and check_attributes(bid_data, ["username", "listing_name", "listing_description", "bid_price", "bid_datetime", "auction_end", "bid_count"]): 
+        message = Mail(
+            from_email='bidbuddy2023@gmail.com',
+            to_emails='oreoanytime@gmail.com',
+            subject='Bid Successful',
+            html_content='<strong>Hi, you are the current highest bidder.</strong>')
+        
+        # to edit: html content (email content)
+
+        sg = SendGridAPIClient(os.environ['SENDGRID_API_KEY'])
+        response = sg.send(message)
+
+        # print(response.status_code, response.body)
+        # print(response)
+
+        return jsonify(
+            {
+                "code": 200,
+                "data": bid_data['username']
+            }
+        )
+    
+    return jsonify(
+        {
+            "code": 400,
+            "message": "bad"
+        }
+    ), 400
+
+
+@app.route('/notify_overbid', methods=['POST'])
+def notify_overbid() :
+    # seller_data = request.get_json()
+
+    bid_data = {
+        "username" : "lesbuyer",
+        "listing_name" : "ball",
+        "listing_description" : "stripes",
+        "bid_price" : 3100,
+        "new_highest_bid" : 3200,
+        "bid_datetime" : 1647213165,
+        "auction_end": 1647213166,
+        "bid_count" : 2,
+    }
+    
+    #bid count to count number of bidder
+
+    # check if data needed is available 
+    if bid_data and check_attributes(bid_data, ["username", "listing_name", "listing_description", "bid_price", "bid_datetime", "auction_end", "bid_count"]):
+        message = Mail(
+            from_email='bidbuddy2023@gmail.com',
+            to_emails='oreoanytime@gmail.com',
+            subject='Overbidded',
+            html_content='<strong>Hi, you have been overbidded.</strong>')
+        
+        # to edit: html content (email content)
+
+        sg = SendGridAPIClient(os.environ['SENDGRID_API_KEY'])
+        response = sg.send(message)
+
+        # print(response.status_code, response.body)
+        # print(response)
+
+        return jsonify(
+            {
+                "code": 200,
+                "data": bid_data['username']
+            }
+        )
+    
+    return jsonify(
+        {
+            "code": 400,
+            "message": "bad"
+        }
+    ), 400
+
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
