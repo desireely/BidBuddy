@@ -167,8 +167,8 @@ def get_user_bids_for_listing(listing_id, user_id):
     bid_list = []
     for doc in bid:
         doc = doc.to_dict()
-        bid_list.append(doc)
         doc["date"] = doc["date"].astimezone().strftime('%Y-%m-%d %H:%M:%S') + " UTC" + doc["date"].astimezone().strftime('%z')
+        bid_list.append(doc)
 
     if len(bid):
         return jsonify(
