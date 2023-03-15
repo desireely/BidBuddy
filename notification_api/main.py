@@ -3,6 +3,7 @@ from utils import *
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
+import amqp_setup
 from dotenv.main import load_dotenv
 
 load_dotenv()
@@ -23,8 +24,8 @@ app = Flask(__name__)
 # seller notified to resell or delete listing when fail
 
 @app.route('/notify_new_listing', methods=['POST'])
-def notify_new_listing():
 
+def notify_new_listing():
     # seller_data = request.get_json()
 
     seller_data = {
@@ -51,13 +52,15 @@ def notify_new_listing():
 
         # print(response.status_code, response.body)
         # print(response)
-
+        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="newlist", 
+            body=message, properties=pika.BasicProperties(delivery_mode = 2)) 
+        
         return jsonify(
             {
-                "code": 200,
-                "data": seller_data['username']
+                "code": 201,
+                "message": "good"
             }
-        )
+        ), 201
     
     return jsonify(
         {
@@ -67,6 +70,16 @@ def notify_new_listing():
     ), 400
 
     # return if no data or missing data 
+
+def send_email_consumer(channel, method, properties, body):
+    message = Mail.from_json(body)
+    try:
+        response = sg.send(message)
+        print(f"Email sent to {message.to[0].email} with status code {response.status_code}")
+        channel.basic_ack(delivery_tag=method.delivery_tag)
+    except Exception as e:
+        print(f"Error sending email to {message.to[0].email}: {e}")
+        channel.basic_reject(delivery_tag=method.delivery_tag, requeue=False)
 
 
 @app.route('/notify_bidsuccess', methods=['POST'])
