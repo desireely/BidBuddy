@@ -9,8 +9,7 @@ from firebase_admin import firestore
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-dbDict = json.loads(environ.get('dbBidCred'))
-cred = credentials.Certificate(dbDict)
+cred = credentials.Certificate(environ.get('bidCredPath') or "bidCred.json")
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
