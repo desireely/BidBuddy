@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-import pytz
 import json
 
 import firebase_admin
@@ -91,7 +90,6 @@ def create_bid():
         ), 500
 
     newBid["date"] = newBid["date"].strftime('%Y-%m-%d %H:%M:%S') + " UTC" + newBid["date"].astimezone().strftime('%z')
-    print(newBid)
 
     return jsonify(
         {
