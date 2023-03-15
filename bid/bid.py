@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 import json
+from os import environ
 
 import firebase_admin
 from firebase_admin import credentials
@@ -8,7 +9,8 @@ from firebase_admin import firestore
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-cred = credentials.Certificate("bidCred.json")
+dbDict = json.loads(environ.get('dbBidCred'))
+cred = credentials.Certificate(dbDict)
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
