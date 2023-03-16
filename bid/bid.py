@@ -17,32 +17,6 @@ db = firestore.client()
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/bid", methods=['GET'])
-def get_all_bids():
-    bids = db.collection("bid").get()
-    allBids = []
-    for bid in bids:
-        bid = bid.to_dict()
-        bid["date"] = bid["date"].astimezone().strftime('%Y-%m-%d %H:%M:%S') + " UTC" + bid["date"].astimezone().strftime('%z')
-        allBids.append(bid)
-
-    if len(bids):
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "bids": allBids
-                }
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no bids."
-        }
-    ), 404
-
-
 @app.route("/bid", methods=['POST'])
 def create_bid():
     newBid = request.json
@@ -189,6 +163,54 @@ def get_user_bids_for_listing(listing_id, user_id):
         }
     ), 404
 
+# @app.route("/bid", methods=['GET'])
+# def get_all_bids():
+#     bids = db.collection("bid").get()
+#     allBids = []
+#     for bid in bids:
+#         bid = bid.to_dict()
+#         bid["date"] = bid["date"].astimezone().strftime('%Y-%m-%d %H:%M:%S') + " UTC" + bid["date"].astimezone().strftime('%z')
+#         allBids.append(bid)
+
+#     if len(bids):
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": {
+#                     "bids": allBids
+#                 }
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "There are no bids."
+#         }
+#     ), 404
+
+# @app.route("/bid/<int:listing_id>/<int:user_id>/<float:bid_price>", methods=['DELETE'])
+# def delete_bid(listing_id, user_id, bid_price):
+#     query = db.collection("bid").where("listing_id", "==", listing_id).where("user_id", "==", user_id).where("bid_price", "==", bid_price)
+
+#     bid = query.get()
+#     for doc in bid:
+#         try:
+#             delBid = doc.to_dict()
+#             doc.reference.delete()
+#         except Exception as e:
+#             return jsonify(
+#                 {
+#                     "code": 500,
+#                     "message": "An error occurred while deleting the bid. " + str(e)
+#                 }
+#             ), 500
+#     return jsonify(
+#         {
+#             "code": 200,
+#             "data": delBid,
+#             "message": "Bid has been deleted successfully."
+#         }
+#     ), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
