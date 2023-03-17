@@ -9,7 +9,7 @@ from dotenv.main import load_dotenv
 
 load_dotenv()
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 
 # TO DO
@@ -24,7 +24,7 @@ app = Flask(__name__)
 # transaction completed
 # seller notified to resell or delete listing when fail
 
-@app.route('/notify_new_listing', methods=['POST'])
+# @app.route('/notify_new_listing', methods=['POST'])
 
 def receivedata():
     amqp_setup.check_setup()
@@ -180,4 +180,4 @@ def send_email(body):
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    receivedata()
