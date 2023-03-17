@@ -15,7 +15,7 @@ db = firestore.client()
 app = Flask(__name__)
 CORS(app)
 
-#To create a new user
+#To authenticate user 
 @app.route("/user/login", methods=['POST'])
 def user_auth():
     data = request.get_json()
