@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "esd-project-listing",
+  "private_key_id": "861000cb1665b1d38eefa6f8e8920083e6780927",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDJVpLSuo2OnB5n\nHMd7OVjsAFK1FLKlAb1FvbQS5d+aGX9AU/BNXkFXWaoFTWewNyTAPz4NTJFgQJvC\n/OfYpa+cGhHsdhl+ZnVRXY/3Luw2jOs6SowwfRz9E9K4/LwXyl2oBp3XPZWfBS1b\nW4i/rJDfrA5+MOUgB403BFjC4aIvQ2jCK0xrw1cM2qdHYSj/rUZgZnE7HOJAzpbK\nWWJWUDyIpZ/TlvSXTUNOWQXvxyoPbAuTf5tNAfKR2IKKZuUaJs1KwmAxYeE5Pvha\nlIL5JBgIEmuOWmVf+KTBqSoBOT6C2b1vEz4tihy68vxrdyrrp2XBa4nU0ULk3IaF\n8YbFl4WLAgMBAAECggEAW9m8/ZnRvn+Gdy/v6U1OPcwf7zBUF2blvA1BO2XXTmvX\nW7dvZzxavsjPAcBAT2m4wGOZoWOO5sRSyu+prXJY3PQfvSpbkwiW+NmgNfoYFQLQ\nxTUBI5XQRbxnY7EY9hmCBIeQNoOH4JXyDT2C8z58kS3jJrqTrLsFN1YqUC2zWa+t\nvfJoDuNwagofB5lyn8Mc2XeOIDcyiRpbRm3teOagvWWtTUcUYqCl1bO174sb22D0\ndc44a8ovDGVV9vHjUtMZF1P5IMXvgZ4hQSCDZ2liTwMidWhm6Jj7UZaMPw6i6F80\nsv4GEsPUhohylNZi/tyCpZUpeU6Lizl+8AdBDPttAQKBgQDpokReKkIgqrxx8yRo\nSDcRMfhj6aaW/rJGvFJGF7M1SNr2NiC8cZNPg6FktuPCQrg4rhP/rQrZTP1p8L1V\nxRhcxGXqmLZhpq9hrxMIVNoSxiorLpNEzZgwzya2lVpnZuGghimEfhN7x2LVi4tE\nfU+KX2XDsasheda/kxRDovWDywKBgQDcnNOuqPpGNg0TA16W9K98OkJ9Yq2rYLAh\nrIIi6ovjrjn8SS/bJQPx7Bj85e0nmB8/6B7IoQWURahM8tmcK3k7KPhTgu3oAQCf\nW877VgEoEadwMwXr53imrvhbbsqQkC1/yYi0JbYrCx5dUiLfWQblCmEGAlZl+JFp\ngJI2NDdNQQKBgQCznHLw7Y3e7UNoWuMfZH0pNABgV00iAfZuWPLrPecgzLzA0cYC\n+VGlrG1ULyITwxU7ReDMC20ut3iOjGwSVy6uirJLU1HK6skj0ONR4WGxUzUx82F2\nYJRi2a5KabGRks9ciCe82uwBmbxKrTfI1IlkuIhUlO8aEj/dEaZfhRU4VwKBgQCD\n/WhAtWSXoTsNRxTOqDJd1tV1Axb40+5NF1L85OsxG0oiAP+a03iawzDoDgBnkgIQ\nUCYqzvvxjAN3lkxPvUrY9FguTsVb602eCmW5xekHOhi9bil6zJBI2aJJwe17tGck\nb0VU0sM82XgfSUcH7dHMMvt9huR+Oct2HbBcsbzsgQKBgQCSn/Ev/DzjCvbO734K\n5T6FBbBS1/1sNBc2pmg1enn0iF9/DZPi5L7YiH/A+KzmuF2MbVy0/LS1ZdI2YYJr\nVYsT8d3fqm7wra4Vw2Gx+1Maa0bNQxQkXQhqvuN5pgq1YdYkLYVpfGJxhWYumj4Z\nLvaDv2mumn53te0UZ1GH1cP1nw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-r90hp@esd-project-listing.iam.gserviceaccount.com",
+  "client_id": "109921770127327074173",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-r90hp%40esd-project-listing.iam.gserviceaccount.com",
+  "storageBucket": "https://console.firebase.google.com/project/esd-project-listing/storage/esd-project-listing.appspot.com/files"
+}
