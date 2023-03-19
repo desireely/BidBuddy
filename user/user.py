@@ -1,11 +1,8 @@
 import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+from firebase_admin import credentials, firestore, auth
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
-import hashlib
 
 import re
 email_regex = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
@@ -19,40 +16,39 @@ app = Flask(__name__)
 CORS(app)
 
 #To get details of user
-@app.route("/user/<int:userid>")
+@app.route("/user/<string:userid>")
 def find_by_userid(userid):
-    query = db.collection('users').where("userid", "==", userid).limit(1)
-    user = query.get()
-    if len(user):
+    if check_auth():
+        query = db.collection('users').where("userid", "==", userid).limit(1)
+        user = query.get()
+        if len(user):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": user[0].to_dict()
+                }
+            )   
         return jsonify(
             {
-                "code": 200,
-                "data": user[0].to_dict()
+                "code": 404,
+                "message": "User not found."
             }
-        )   
-    return jsonify(
-        {
-            "code": 404,
-            "message": "User not found."
-        }
-    ), 404
+        ), 404
+    else:
+        return jsonify(
+            {
+                "code": 401,
+                "message": "Unauthorised."
+            }
+        ), 401
 
 #To create a new user
 @app.route("/user", methods=['POST'])
 def create_user():
     data = request.get_json()
-    #Check valid email
-    match = re.match(email_regex, data['email'])
-    if match:
+    #Check valid email and password
+    if verify_info(data['email'],data['password']):
         #Set userid
-        user_ref = db.collection('users').get()
-        if user_ref:
-            userid = len(user_ref) + 1
-            data['userid'] = userid
-        else:
-            userid = 1
-            data['userid'] = userid
-
         try:
             # Check if user already exists
             query = db.collection("users").where("email", "==", data['email']).limit(1)
@@ -69,11 +65,17 @@ def create_user():
                     }
                 ), 400
 
+            # Add user into firebase authentication
+            auth.create_user(email=data['email'], password=data['password'])
             # Create new user
-            users = db.collection('users').document()
-            hashed_password = hashlib.sha256(data["password"].encode('utf-8')).hexdigest()
-            data["password"] = hashed_password
-            users.set(data)
+            user = auth.get_user_by_email(data['email'])
+            user_id = user.uid
+            #Set userid
+            data['userid'] = user_id
+            user_ref = db.collection('users').document()
+            #Remove password from data
+            data.pop('password')
+            user_ref.set(data)
 
         except:
             return jsonify(
@@ -92,7 +94,7 @@ def create_user():
                     "data": {
                         "email": data['email']
                     },
-                    "message": "Invalid email entered."
+                    "message": "Invalid email or password less than 6 characters"
                 }
             ), 400
     
@@ -104,77 +106,105 @@ def create_user():
     ), 201
 
 #To update the user details
-@app.route("/user/<int:userid>", methods=['PUT'])
+@app.route("/user/<string:userid>", methods=['PUT'])
 def update_user(userid):
-    data = request.get_json()
-    if data.get('password'):
-        data["password"] = hashlib.sha256(data["password"].encode('utf-8')).hexdigest()
-    if data.get('email'):
-        match = re.match(email_regex, data["email"])
-        if not match:
+    if check_auth():
+        data = request.get_json()
+        try:
+            query = db.collection('users').where("userid", "==", userid).limit(1)
+            user = query.get()
+            docid = user[0].id
+            user_ref = db.collection('users').document(docid)
+            username = user_ref.get().to_dict()['username']
+
+            #Update email in firestore
+            user_ref.update(data)
+            updated_user = user_ref.get()
+        except:
             return jsonify(
                 {
-                    "code": 400,
+                    "code": 500,
                     "data": {
-                        "email": data["email"]
+                        "username": username
                     },
-                    "message": "Invalid email entered."
+                    "message": "An error occurred updating the user."
                 }
-            ), 400
-        
-    try:
-        query = db.collection('users').where("userid", "==", userid).limit(1)
-        user = query.get()
-        docid = user[0].id
-        user_ref = db.collection('users').document(docid)
-        user_ref.update(data)
-        updated_user = user_ref.get()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "email": data['email']
-                },
-                "message": "An error occurred updating the user."
-            }
-        ), 500
-    return jsonify(
-        {
-            "code": 200,
-            "data": updated_user.to_dict()
-        }
-    )
-
-@app.route("/user/<int:userid>", methods=['DELETE'])
-def delete_user(userid):
-    try:
-        query = db.collection('users').where("userid","==",userid).limit(1)
-        user = query.get()
-        docid = user[0].id
-        user_ref = db.collection('users').document(docid)
-        user_ref.delete()
+            ), 500
         return jsonify(
             {
                 "code": 200,
-                "data": {
-                    "userid": userid
-                },
-                "message": "User deleted successfully."
+                "data": updated_user.to_dict()
             }
-        ), 200
-
-    except Exception as e:
+        )
+    else:
         return jsonify(
             {
-                "code": 500,
-                "data": {
-                    "userid": userid
-                },
-                "message": f"An error occurred while deleting user: {str(e)}"
+                "code": 401,
+                "message": "Unauthorised."
             }
-        ), 500
+        ), 401
 
-    
+@app.route("/user/<string:userid>", methods=['DELETE'])
+def delete_user(userid):
+    if check_auth():
+        try:
+            #Delete data from firestore
+            query = db.collection('users').where("userid","==",userid).limit(1)
+            user = query.get()
+            docid = user[0].id
+            user_ref = db.collection('users').document(docid)
+            username = user_ref.get().to_dict()['username']
+            user_ref.delete()
+
+            #Delete data from firebase authentication
+            auth.delete_user(userid)
+
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "username": username
+                    },
+                    "message": "User deleted successfully."
+                }
+            ), 200
+
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "data": {
+                        "userid": userid
+                    },
+                    "message": f"An error occurred while deleting user: {str(e)}"
+                }
+            ), 500
+    else:
+        return jsonify(
+            {
+                "code": 401,
+                "message": "Unauthorised."
+            }
+        ), 401
+        
+
+def check_auth():
+    # Get the Firebase ID token from the request header
+    try:
+        # Verify the Firebase ID token
+        id_token = request.headers.get('Authorization')
+        auth.verify_id_token(id_token)
+        return True
+    except:
+        return False
+
+def verify_info(email,password):
+    if re.match(email_regex, email) and len(password) >= 6:
+        return True
+    else:
+        return False
+
+
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
