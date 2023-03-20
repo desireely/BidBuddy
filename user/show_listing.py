@@ -12,7 +12,7 @@ listing_URL = "http://127.0.0.1:5000/listing"
 user_URL = "http://127.0.0.1:5005/user"
 
 
-# Add a new listing
+# Show all ongoing listing
 @app.route("/showlisting")
 def get_ongoing_listing():
         

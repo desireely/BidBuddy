@@ -10,12 +10,11 @@ bid_URL = "http://127.0.0.1:5000/bid"
 user_URL = "http://127.0.0.1:5005/user"
 
 
-# Add a new listing
+# Show all user ongoing listing
 @app.route("/showdetailsofbids/<string:userid>")
-def get_user_listing():
+def get_user_listing(userid):
     try:
-        user = request.get_json()
-        buyerid = user['userid']
+        buyerid = userid
         headers = request.headers
 
         result = processUserListing(headers,buyerid)
