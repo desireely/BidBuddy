@@ -134,29 +134,64 @@ def delete_image():
 # Get all listings
 @app.route("/listing", methods=['GET'])
 def get_all_listings():
-    listings_db_ref = db.collection(u'listings')
-    listing_doc_ref = listings_db_ref.stream()
+    listings_collection_ref = db.collection(u'listings')
 
-    return jsonify(
-        {
-            "code": 200,
-            "data": {
-                "listings": [listing.to_dict() for listing in listing_doc_ref]
+    try:
+        listing_doc_ref = listings_collection_ref.stream()
+        listings = [listing.to_dict() for listing in listing_doc_ref]
+
+        if len(listings) == 0:
+            return jsonify(
+                {
+                "code": 404,
+                "message": "No listings found"
+                }
+            )
+
+        # Have listings
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "listings": listings
+                }
             }
-        }
-    )
+        )
+
+    except:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "Error retrieving listings"
+            }
+        )
 
 
 # Get a particular listing according to listingid
 @app.route("/listing/<string:listingid>", methods=['GET'])
 def get_listing_by_listingid(listingid):
-    listings_db_ref = db.collection(u'listings')
 
-    listing_doc_ref = listings_db_ref.document(listingid)
+    listings_collection_ref = db.collection(u'listings')
+    listing_doc_ref = listings_collection_ref.document(listingid)
 
-    listing = listing_doc_ref.get()
+    try:
+        listing = listing_doc_ref.get()
+    except:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There is no listing with this listingid"
+            }
+        ), 404
+    
+    # user has listings
+    return jsonify(
+            {
+                "code": 200,
+                "data": listing.to_dict()
+            }
+        )
 
-    return listing.to_dict()
 
 
 # Add a new listing
@@ -205,7 +240,8 @@ def add_listing():
 @app.route("/listing/<string:listingid>", methods=['PUT'])
 def update_listing(listingid):
 
-    listing_doc_ref = db.collection(u'listings').document(listingid)
+    listing_collection_ref = db.collection(u'listings')
+    listing_doc_ref = listing_collection_ref.document(listingid)
     listing = listing_doc_ref.get()
 
     print(listing.to_dict())
@@ -253,7 +289,9 @@ def update_listing(listingid):
 def delete_listing(listingid):
 
     try:
-        db.collection(u'listings').document(listingid).delete()
+        listing_collection_ref = db.collection(u'listings')
+        listing_document_ref = listing_collection_ref.document(listingid)
+        listing_document_ref.delete()
     except:
         return jsonify(
             {
@@ -269,6 +307,47 @@ def delete_listing(listingid):
         }
     )
 
+
+# Get all listings that a user bidded for according to his userid
+@app.route("/listing/user/<int:userid>", methods=['GET'])
+def get_listings_according_userid(userid):
+
+    listing_collection_ref = db.collection(u'listings')
+    query_listings_according_userid_ref = listing_collection_ref.where(u'userid', u'==', userid)
+
+    try:
+        listings_according_userid = query_listings_according_userid_ref.stream()
+
+        # for listing in listings_according_userid:
+        #     print(f'{listing.id} => {listing.to_dict()}')
+
+        listings = [listing.to_dict() for listing in listings_according_userid]
+
+        if len(listings) == 0:
+            return jsonify(
+                {
+                "code": 404,
+                "message": "This userid has no listings found"
+                }
+            )
+
+        # user has listings
+        return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "listings": listings
+                    }
+                }
+            )
+
+    except:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "Error retrieving listings"
+            }
+        ), 404
 
 
 #####################################
