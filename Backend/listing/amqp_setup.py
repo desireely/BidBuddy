@@ -34,7 +34,7 @@ channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
 
 #bind new_listing queue
-channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='sendemail') 
+channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.email') 
     # bind the queue to the exchange via the key
     # any routing_key with two words and ending with '.error' will be matched
 
@@ -44,7 +44,7 @@ channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
 
 #bind new_listing queue
-channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='sendtele') 
+channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.tele') 
     # bind the queue to the exchange via the key
     # any routing_key with two words and ending with '.error' will be matched
 
