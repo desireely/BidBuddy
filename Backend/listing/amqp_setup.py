@@ -20,8 +20,8 @@ connection = pika.BlockingConnection(
 channel = connection.channel()
 # Set up the exchange if the exchange doesn't exist
 # - use a 'topic' exchange to enable interaction
-exchangename="email_notification"
-exchangetype="direct"
+exchangename="notification"
+exchangetype="topic"
 channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, durable=True)
     # 'durable' makes the exchange survive broker restarts
 
@@ -29,13 +29,22 @@ channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, dura
 # - instead of setting up the queues using RabbitMQ UI.
 
 ############   send_email queue   #############
-
 queue_name = 'send_email'
 channel.queue_declare(queue=queue_name, durable=True) 
     # 'durable' makes the queue survive broker restarts
 
 #bind new_listing queue
 channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='sendemail') 
+    # bind the queue to the exchange via the key
+    # any routing_key with two words and ending with '.error' will be matched
+
+############   send tele queue   #############
+queue_name = 'send_tele'
+channel.queue_declare(queue=queue_name, durable=True) 
+    # 'durable' makes the queue survive broker restarts
+
+#bind new_listing queue
+channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='sendtele') 
     # bind the queue to the exchange via the key
     # any routing_key with two words and ending with '.error' will be matched
 
