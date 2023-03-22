@@ -14,7 +14,7 @@ import uuid
 #####################################
 
 # Use a service account.
-cred = credentials.Certificate('firebasekey.json')
+cred = credentials.Certificate('../firebasekey.json')
 
 app = firebase_admin.initialize_app(cred)
 
