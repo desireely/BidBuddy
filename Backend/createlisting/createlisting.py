@@ -9,11 +9,13 @@ app = Flask(__name__)
 
 
 listing_URL = "http://127.0.0.1:5000/listing"
-user_URL = "http://127.0.0.1:5005/user/
+user_URL = "http://127.0.0.1:5005/user/"
 
 # Add a new listing
 @app.route("/createlisting/<string:userid>", methods=['POST'])
+# @app.route("/createlisting", methods=['POST'])
 def add_listing(userid):
+# def add_listing():
     
     if request.is_json:
 
@@ -73,6 +75,13 @@ def processListing(listing):
     message_email = json.dumps(
         {
             "user_emails": [email],
+            "subject": f"{listing_name} Posted Successfully!",
+            "html_body": "<strong>Hello, this is a test email.</strong>"
+        }
+    )
+    message_email = json.dumps(
+        {
+            "user_emails": 'email',
             "subject": f"{listing_name} Posted Successfully!",
             "html_body": "<strong>Hello, this is a test email.</strong>"
         }
