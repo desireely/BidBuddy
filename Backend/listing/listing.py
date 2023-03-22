@@ -14,32 +14,11 @@ import uuid
 #####################################
 
 # Use a service account.
-cred = credentials.Certificate('firebasekey.json')
+cred = credentials.Certificate('../firebasekey.json')
 
 app = firebase_admin.initialize_app(cred)
 
 db = firestore.client()
-
-
-# firebaseConfig = {
-#   "apiKey": "AIzaSyD24Sfv8QG_YD1aaGMCOF-DlnGv6VWjnek",
-#   "authDomain": "esd-project-listing.firebaseapp.com",
-#   "projectId": "esd-project-listing",
-#   "databaseURL": "https://esd-project-listing.firebaseio.com",
-#   "storageBucket": "esd-project-listing.appspot.com",
-#   "messagingSenderId": "877925820233",
-#   "appId": "1:877925820233:web:0c468f7d123ccc39145c98",
-#   "measurementId": "G-CZY44KZTDJ"
-# }
-
-# firebase = pyrebase.initialize_app(firebaseConfig)
-
-# # database
-# firebase.database()
-# db = firebase.database()
-
-# # storage
-# storage = firebase.storage()
 
 
 
@@ -138,8 +117,17 @@ def get_all_listings():
 
     try:
         listing_doc_ref = listings_collection_ref.stream()
-        listings = [listing.to_dict() for listing in listing_doc_ref]
+        # listings = [listing.to_dict() for listing in listing_doc_ref]
+        listings = []
 
+        for listing in listing_doc_ref:
+            listingid = listing.id
+            listing_dict = listing.to_dict()
+            listing_dict['listingid'] = listingid
+            
+            listings.append(listing_dict)
+
+        # if listings list is empty
         if len(listings) == 0:
             return jsonify(
                 {
@@ -185,10 +173,13 @@ def get_listing_by_listingid(listingid):
         ), 404
     
     # user has listings
+    listing_dict = listing.to_dict()
+    listing_dict['listingid'] = listingid
+
     return jsonify(
             {
                 "code": 200,
-                "data": listing.to_dict()
+                "data": listing_dict
             }
         )
 
@@ -215,7 +206,7 @@ def add_listing():
         u"userid": data["userid"],
         u"transaction_end_datetime": data["transaction_end_datetime"],
         u"transaction_status": data["transaction_status"],
-        u"listing_image_file_name": data["listing_image_file_name"]
+        u"listing_image_file_name": data["listing_image_file_name"],
     }
 
     try:
@@ -241,12 +232,10 @@ def add_listing():
 def update_listing(listingid):
 
     listing_collection_ref = db.collection(u'listings')
-    listing_doc_ref = listing_collection_ref.document(listingid)
-    listing = listing_doc_ref.get()
 
-    print(listing.to_dict())
-    
-    if listing_doc_ref:
+    try:
+        listing_doc_ref = listing_collection_ref.document(listingid)
+
         data = request.get_json()
         
         if 'auction_end_datetime' in data:
@@ -266,22 +255,26 @@ def update_listing(listingid):
         if "listing_image_file_name" in data:
             listing_doc_ref.update({u'listing_image_file_name': data["listing_image_file_name"]})
 
+        listing_updated = listing_doc_ref.get()
+        listing_dict = listing_updated.to_dict()
+        listing_dict['listingid'] = listingid
+
         return jsonify(
             {
                 "code": 200,
-                "data": listing.to_dict()
+                "data": listing_dict
             }
         )
-    
-    return jsonify(
-    {
-        "code": 404,
-        "data": {
-            "listingid": listingid
-        },
-        "message": "Listing not found."
-    }
-    ), 404
+    except:
+        return jsonify(
+            {
+                "code": 404,
+                "data": {
+                    "listingid": listingid
+                },
+                "message": "Listing not found."
+            }
+            ), 404
 
 
 # Delete a listing
@@ -318,10 +311,15 @@ def get_listings_according_userid(userid):
     try:
         listings_according_userid = query_listings_according_userid_ref.stream()
 
-        # for listing in listings_according_userid:
-        #     print(f'{listing.id} => {listing.to_dict()}')
+        # listings = [listing.to_dict() for listing in listings_according_userid]
 
-        listings = [listing.to_dict() for listing in listings_according_userid]
+        listings = []
+
+        for listing in listings_according_userid:
+            listing_dict = listing.to_dict()
+            listing_dict['listingid'] = listing.id
+            
+            listings.append(listing_dict)
 
         if len(listings) == 0:
             return jsonify(
@@ -336,7 +334,7 @@ def get_listings_according_userid(userid):
                 {
                     "code": 200,
                     "data": {
-                        "listings": listings
+                        "listings": listing_dict
                     }
                 }
             )
