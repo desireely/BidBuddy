@@ -74,7 +74,7 @@ def create_bid():
     ), 201
 
 
-@app.route("/bid/user/<int:user_id>", methods=['GET'])
+@app.route("/bid/user/<string:user_id>", methods=['GET'])
 def get_user_bids(user_id):
     query = db.collection("bid").where("user_id", "==", user_id)
 
@@ -132,7 +132,7 @@ def get_listing_bids(listing_id):
     ), 404
 
 
-@app.route("/bid/<int:listing_id>/<int:user_id>", methods=['GET'])
+@app.route("/bid/<int:listing_id>/<string:user_id>", methods=['GET'])
 def get_user_bids_for_listing(listing_id, user_id):
     query = db.collection("bid").where("listing_id", "==", listing_id).where("user_id", "==", user_id)
 
@@ -163,6 +163,47 @@ def get_user_bids_for_listing(listing_id, user_id):
         }
     ), 404
 
+@app.route("/bid/highest/<string:user_id>")
+def get_user_highest_bids(user_id):
+    query = db.collection("bid").where("user_id", "==", user_id)
+
+    bids = query.get()
+    highest = {}
+    unique_list = []
+    for bid in bids:
+        bid = bid.to_dict()
+
+        listing_id = bid["listing_id"]
+        bid_price = bid["bid_price"]
+
+        if listing_id not in highest:
+            bid["date"] = bid["date"].astimezone().strftime('%Y-%m-%d %H:%M:%S') + " UTC" + bid["date"].astimezone().strftime('%z')
+            highest[listing_id] = bid
+            
+        elif bid_price > highest[listing_id]["bid_price"]:
+            bid["date"] = bid["date"].astimezone().strftime('%Y-%m-%d %H:%M:%S') + " UTC" + bid["date"].astimezone().strftime('%z')
+            highest[listing_id] = bid
+        
+    for key, val in highest.items():
+        unique_list.append(val)
+
+    if len(bids):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "bids": unique_list
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {"user_id": user_id},
+            "message": "There are no bids placed by the user."
+        }
+    ), 404
+
 # @app.route("/bid", methods=['GET'])
 # def get_all_bids():
 #     bids = db.collection("bid").get()
@@ -188,7 +229,7 @@ def get_user_bids_for_listing(listing_id, user_id):
 #         }
 #     ), 404
 
-# @app.route("/bid/<int:listing_id>/<int:user_id>/<float:bid_price>", methods=['DELETE'])
+# @app.route("/bid/<int:listing_id>/<string:user_id>/<float:bid_price>", methods=['DELETE'])
 # def delete_bid(listing_id, user_id, bid_price):
 #     query = db.collection("bid").where("listing_id", "==", listing_id).where("user_id", "==", user_id).where("bid_price", "==", bid_price)
 
