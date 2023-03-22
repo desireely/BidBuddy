@@ -21,27 +21,6 @@ app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-# firebaseConfig = {
-#   "apiKey": "AIzaSyD24Sfv8QG_YD1aaGMCOF-DlnGv6VWjnek",
-#   "authDomain": "esd-project-listing.firebaseapp.com",
-#   "projectId": "esd-project-listing",
-#   "databaseURL": "https://esd-project-listing.firebaseio.com",
-#   "storageBucket": "esd-project-listing.appspot.com",
-#   "messagingSenderId": "877925820233",
-#   "appId": "1:877925820233:web:0c468f7d123ccc39145c98",
-#   "measurementId": "G-CZY44KZTDJ"
-# }
-
-# firebase = pyrebase.initialize_app(firebaseConfig)
-
-# # database
-# firebase.database()
-# db = firebase.database()
-
-# # storage
-# storage = firebase.storage()
-
-
 
 #####################################
 # INITIALISE FLASK APP
@@ -369,9 +348,9 @@ def get_listings_according_userid(userid):
         ), 404
 
 
-######################################
+#####################################
 # RUN SCRIPT
-######################################
+#####################################
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
