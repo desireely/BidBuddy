@@ -7,6 +7,7 @@ import NewListing from "../views/NewListing.vue";
 import SignUp from "../views/SignUp.vue";
 import Login from "../views/Login.vue";
 import ListingInfo from "../views/ListingInfo.vue";
+import NoResults from "../views/NoResults.vue";
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -49,6 +50,11 @@ const router = createRouter({
       path: "/listinginfo",
       name: "Listing Info",
       component: ListingInfo,
+    },
+    {
+      path: "/noresults",
+      name: "No Results",
+      component: NoResults,
     },
   ],
 });
