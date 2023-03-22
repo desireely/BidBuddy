@@ -103,7 +103,7 @@ def get_user_bids(user_id):
     ), 404
 
 
-@app.route("/bid/listing/<int:listing_id>", methods=['GET'])
+@app.route("/bid/listing/<string:listing_id>", methods=['GET'])
 def get_listing_bids(listing_id):
     query = db.collection("bid").where("listing_id", "==", listing_id)
 
@@ -132,7 +132,7 @@ def get_listing_bids(listing_id):
     ), 404
 
 
-@app.route("/bid/<int:listing_id>/<string:user_id>", methods=['GET'])
+@app.route("/bid/<string:listing_id>/<string:user_id>", methods=['GET'])
 def get_user_bids_for_listing(listing_id, user_id):
     query = db.collection("bid").where("listing_id", "==", listing_id).where("user_id", "==", user_id)
 
@@ -229,7 +229,7 @@ def get_user_highest_bids(user_id):
 #         }
 #     ), 404
 
-# @app.route("/bid/<int:listing_id>/<string:user_id>/<float:bid_price>", methods=['DELETE'])
+# @app.route("/bid/<string:listing_id>/<string:user_id>/<float:bid_price>", methods=['DELETE'])
 # def delete_bid(listing_id, user_id, bid_price):
 #     query = db.collection("bid").where("listing_id", "==", listing_id).where("user_id", "==", user_id).where("bid_price", "==", bid_price)
 
