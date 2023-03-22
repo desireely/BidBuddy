@@ -165,34 +165,26 @@ def get_user_bids_for_listing(listing_id, user_id):
 
 @app.route("/bid/highest/<string:user_id>")
 def get_user_highest_bids(user_id):
-    query = db.collection("bid").where("user_id", "==", user_id)
+    query = db.collection("bid").where("user_id", "==", user_id).order_by('bid_price', direction=firestore.Query.DESCENDING)
 
     bids = query.get()
-    highest = {}
-    unique_list = []
+    unique_listing = []
+    result = []
     for bid in bids:
         bid = bid.to_dict()
-
+        bid["date"] = bid["date"].astimezone().strftime('%Y-%m-%d %H:%M:%S') + " UTC" + bid["date"].astimezone().strftime('%z')
         listing_id = bid["listing_id"]
-        bid_price = bid["bid_price"]
 
-        if listing_id not in highest:
-            bid["date"] = bid["date"].astimezone().strftime('%Y-%m-%d %H:%M:%S') + " UTC" + bid["date"].astimezone().strftime('%z')
-            highest[listing_id] = bid
-            
-        elif bid_price > highest[listing_id]["bid_price"]:
-            bid["date"] = bid["date"].astimezone().strftime('%Y-%m-%d %H:%M:%S') + " UTC" + bid["date"].astimezone().strftime('%z')
-            highest[listing_id] = bid
-        
-    for key, val in highest.items():
-        unique_list.append(val)
+        if listing_id not in unique_listing:
+            unique_listing.append(listing_id)
+            result.append(bid)
 
     if len(bids):
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "bids": unique_list
+                    "bids": result
                 }
             }
         )
