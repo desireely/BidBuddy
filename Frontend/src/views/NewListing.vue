@@ -2,44 +2,57 @@
   <div>
     <h1>New Listing</h1>
     <div class="container">
-      <form>
-        <div class="row">
-          <div class="col-4 mb-3">
-            <div class="card">
-              <img :src="listingImgURL" class="card-img-top"/>
-              <label for="img-upload" class="custom-file-upload">
-                <br/><br/><br/>{{uploadTxt}}
-              </label>
-              <input id="img-upload" type="file" accept="image/*" @change="displayImg"/>
-            </div>
-          </div>
-          <div class="col-8">
-              <div class="mb-3">
-                <label for="listing-name" class="form-label">Listing Name</label>
-                <input type="text" class="form-control" id="listing-name">
-              </div>
-              <div class="mb-3">
-                <label for="listing-description" class="form-label">Listing Decription</label>
-                <textarea class="form-control" id="listing-description"></textarea>
-              </div>
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">$</span>
-                <input type="number" min="0" class="form-control" placeholder="Starting Bid">
-              </div>
-              <div class="mb-3">
-                <label for="starting-date" class="form-label">Bidding Start Date</label>
-                <input type="datetime-local" class="form-control" id="starting-date">
-              </div>
-              <div class="mb-3">
-                <label for="ending-date" class="form-label">Bidding End Date</label>
-                <input type="datetime-local" class="form-control" id="ending-date">
-              </div>
-          </div>
-          <div class="text-end">
-            <button type="submit" class="btn btn-outline-dark">Create</button>
+      <div class="row">
+        <div class="col-4 mb-3">
+          <div class="card">
+            <img :src="listingImgURL" class="card-img-top"/>
+            <label for="img-upload" class="custom-file-upload">
+              <br/><br/><br/>{{uploadTxt}}
+            </label>
+            <input id="img-upload" type="file" accept="image/*" @change="displayImg"/>
           </div>
         </div>
-      </form>
+        <div class="col-8">
+            <div class="mb-3">
+              <label for="listing-name" class="form-label">Listing Name</label>
+              <input type="text" :class="{'form-control': true, 'is-invalid': !listingNameIsValid}" v-model="listingName" id="listing-name">
+              <div class="invalid-feedback">
+                {{listingNameErrMsg}}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="listing-description" class="form-label">Listing Decription</label>
+              <textarea :class="{'form-control': true, 'is-invalid': !listingDescIsValid}" v-model="listingDesc" id="listing-description"></textarea>
+              <div class="invalid-feedback">
+                {{listingDescErrMsg}}
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">$</span>
+              <input type="number" min="0" :class="{'form-control': true, 'is-invalid': !listingBidIsValid}" v-model="listingBid" placeholder="Starting Bid">
+              <div class="invalid-feedback">
+                {{listingBidErrMsg}}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="starting-date" class="form-label">Bidding Start Date</label>
+              <input type="datetime-local" :class="{'form-control': true, 'is-invalid': !startDateIsValid}" v-model="startDate" class="form-control" id="starting-date">
+              <div class="invalid-feedback">
+                {{startDateErrMsg}}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="ending-date" class="form-label">Bidding End Date</label>
+              <input type="datetime-local" :class="{'form-control': true, 'is-invalid': !endDateIsValid}" v-model="endDate" id="ending-date">
+              <div class="invalid-feedback">
+                {{endDateErrMsg}}
+              </div>
+            </div>
+        </div>
+        <div class="text-end">
+          <button @click="validate()" class="btn btn-outline-dark">Create</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -52,6 +65,26 @@ export default {
     return {
       listingImgURL: 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a',
       uploadTxt: "Upload an Image",
+
+      listingName: null,
+      listingNameIsValid: true,
+      listingNameErrMsg: null,
+
+      listingDesc: null,
+      listingDescIsValid: true,
+      listingDescErrMsg: null,
+
+      listingBid: null,
+      listingBidIsValid: true,
+      listingBidErrMsg: null,
+
+      startDate: null,
+      startDateIsValid: true,
+      startDateErrMsg: null,
+
+      endDate: null,
+      endDateIsValid: true,
+      endDateErrMsg: null,
     }
   },
   methods: {
@@ -68,6 +101,55 @@ export default {
           this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a'
           this.uploadTxt = "Please upload an image file!";
       }
+    },
+    validate() {
+      // [this.listingName, this.listingDesc, this.listingBid, this.startDate, this.endDate] = [null, null, null, null, null];
+      [this.listingNameIsValid, this.listingDescIsValid, this.listingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true];
+      [this.listingNameErrMsg, this.listingDescErrMsg, this.listingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
+
+      if (!this.listingName) {
+        this.listingNameErrMsg = "Field is required.";
+        this.listingNameIsValid = false;
+      }
+
+      if (!this.listingDesc) {
+        this.listingDescErrMsg = "Field is required.";
+        this.listingDescIsValid = false;
+      }
+
+      if (!this.listingBid && this.listingBid != 0) {
+        this.listingBidErrMsg = "Field is required.";
+        this.listingBidIsValid = false;
+      } else if (isNaN(this.listingBid) || this.listingBid < 0) {
+        this.listingBidErrMsg = "Please enter a valid starting bid.";
+        this.listingBidIsValid = false;
+      }
+
+      if (!this.startDate) {
+        this.startDateErrMsg = "Field is required.";
+        this.startDateIsValid = false;
+      } else if (new Date(this.startDate) < new Date()) {
+        this.startDateErrMsg = "Start date has already passed.";
+        this.startDateIsValid = false;
+      }
+
+      if (!this.endDate) {
+        this.endDateErrMsg = "Field is required.";
+        this.endDateIsValid = false;
+      } else if (new Date(this.endDate) < new Date()) {
+        this.endDateErrMsg = "End date has already passed.";
+        this.endDateIsValid = false;
+      } else if (this.startDate && this.endDate) {
+        if (new Date(this.endDate) <= new Date(this.startDate)) {
+          this.endDateErrMsg = "End date must be after start date.";
+          this.endDateIsValid = false;
+        }
+      }
+      
+      this.newListing();
+    },
+    newListing() {
+      
     }
   }
 }
