@@ -1,6 +1,6 @@
 <template>
   <div class="card mb-4" style="width: 20rem;">
-    <img src="..." class="card-img-top">
+    <img src="" class="card-img-top">
     <div class="card-body">
       <div class="row align-items-center">
         <div class="col-7">
@@ -9,7 +9,8 @@
           </div>
         </div>
         <div class="col-5 text-end">
-          <router-link to="/listinginfo" class="btn btn-outline-dark py-1 px-2">Place Bid</router-link>
+          <router-link :to="{ path: '/listinginfo', query: { listingID: listingData.listingid } }"
+            class="btn btn-outline-dark py-1 px-2">Place Bid</router-link>
         </div>
       </div>
       <p class="card-text text-start text-wrap mt-2" style="color: #C6C6C6">Auction ends on <br> {{

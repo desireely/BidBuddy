@@ -27,24 +27,30 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'ListingInfo',
-  // methods: {
-  //   getListingInfo() {
-  //     const path = 'http://127.0.0.1:5000/listing/' + listingID;
-  //     axios.get(path)
-  //       .then((res) => {
-  //         this.listingInfo = res.data.data.listings;
-  //         console.log(res.data.data.listings);
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   },
-  // },
-  // created() {
-  //   this.getListingInfo();
-  // },
+  methods: {
+    getListingInfo() {
+      if (this.$route.query.listingID) {
+        var listingID = this.$route.query.listingID
+        console.log("LISTING ID:", listingID)
+        const path = 'http://127.0.0.1:5000/listing/' + listingID;
+        console.log("PATH:", path)
+        axios.get(path)
+          .then((res) => {
+            this.listingInfo = res.data.data;
+            console.log(this.listingInfo);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    },
+  },
+  created() {
+    this.getListingInfo();
+  },
 }
 </script>
 
