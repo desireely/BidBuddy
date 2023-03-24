@@ -7,7 +7,7 @@
           <div class="card">
             <img :src="listingImgURL" class="card-img-top"/>
             <label for="img-upload" class="custom-file-upload">
-              <br/><br/><br/>"{{uploadTxt}}"
+              <br/><br/><br/>{{uploadTxt}}
             </label>
             <input id="img-upload" type="file" accept="image/*" @change="displayImg" :class="{'form-control': true, 'is-invalid': !listingImageIsValid}"/>
             <div class="invalid-feedback">
@@ -113,22 +113,25 @@ export default {
       [this.listingImage, this.listingName, this.listingDesc, this.startingBid, this.startDate, this.endDate] = [null, null, null, null, null, null];
       [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.startingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true, true];
       [this.listingNameErrMsg, this.listingDescErrMsg, this.startingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
+      this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a';
     },
     displayImg(event) {
-      this.listingImage = event.target.files[0];
-      if (this.listingImage.type.startsWith('image/')) {
-        this.listingImgURL = URL.createObjectURL(this.listingImage);
-        if (this.listingImgURL == 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a') {
-          this.uploadTxt = "Upload an Image";
-        } else {
+      if (event.target.files[0]) {
+        this.listingImage = event.target.files[0];
+        if (this.listingImage.type.startsWith('image/')) {
+          this.listingImgURL = URL.createObjectURL(this.listingImage);
           this.uploadTxt = "";
+          this.listingImageIsValid = true;
+        } else {
+          this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a'
+          this.listingImage = null;
+          this.listingImageIsValid = false;
+          this.uploadTxt = "Upload an Image";
         }
-        this.listingImageIsValid = true;
       } else {
-        this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a'
+        this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a';
         this.listingImage = null;
         this.listingImageIsValid = false;
-        this.uploadTxt = "Upload an Image";
       }
     },
     validateName() {
