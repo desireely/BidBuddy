@@ -56,6 +56,21 @@
           <button @click="validate()" class="btn btn-outline-dark">Create</button>
         </div>
       </div>
+
+      <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true" ref="successModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="successModalLabel">Listing created!</h1>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -215,6 +230,10 @@ export default {
         axios.post('http://127.0.0.1:5000/listing', {data: listing})
         .then(response => {
           console.log(response.data)
+          this.resetInputs();
+          var myModal = new bootstrap.Modal(this.$refs.successModal)
+          var modalToggle = this.$refs.successModal;
+          myModal.show(modalToggle);
         })
         .catch(error => {
           console.log(error)
