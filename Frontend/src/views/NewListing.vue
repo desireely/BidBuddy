@@ -32,9 +32,9 @@
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon1">$</span>
-              <input type="number" min="0" :class="{'form-control': true, 'is-invalid': !listingBidIsValid}" v-model="listingBid" placeholder="Starting Bid" @change="validateBid()">
+              <input type="number" min="0" :class="{'form-control': true, 'is-invalid': !startingBidIsValid}" v-model="startingBid" placeholder="Starting Bid" @change="validateBid()">
               <div class="invalid-feedback">
-                {{listingBidErrMsg}}
+                {{startingBidErrMsg}}
               </div>
             </div>
             <div class="mb-3">
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'NewListing',
   data() {
@@ -79,9 +80,9 @@ export default {
       listingDescIsValid: true,
       listingDescErrMsg: null,
 
-      listingBid: null,
-      listingBidIsValid: true,
-      listingBidErrMsg: null,
+      startingBid: null,
+      startingBidIsValid: true,
+      startingBidErrMsg: null,
 
       startDate: null,
       startDateIsValid: true,
@@ -94,9 +95,9 @@ export default {
   },
   methods: {
     resetInputs() {
-      [this.listingImage, this.listingName, this.listingDesc, this.listingBid, this.startDate, this.endDate] = [null, null, null, null, null, null];
-      [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.listingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true, true];
-      [this.listingNameErrMsg, this.listingDescErrMsg, this.listingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
+      [this.listingImage, this.listingName, this.listingDesc, this.startingBid, this.startDate, this.endDate] = [null, null, null, null, null, null];
+      [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.startingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true, true];
+      [this.listingNameErrMsg, this.listingDescErrMsg, this.startingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
     },
     displayImg(event) {
       this.listingImage = event.target.files[0];
@@ -134,15 +135,15 @@ export default {
       }
     },
     validateBid() {
-      if (!this.listingBid && this.listingBid != 0) {
-        this.listingBidErrMsg = "Field is required.";
-        this.listingBidIsValid = false;
-      } else if (isNaN(this.listingBid) || this.listingBid < 0) {
-        this.listingBidErrMsg = "Please enter a valid starting bid.";
-        this.listingBidIsValid = false;
+      if (!this.startingBid && this.startingBid != 0) {
+        this.startingBidErrMsg = "Field is required.";
+        this.startingBidIsValid = false;
+      } else if (isNaN(this.startingBid) || this.startingBid < 0) {
+        this.startingBidErrMsg = "Please enter a valid starting bid.";
+        this.startingBidIsValid = false;
       } else {
-        this.listingBidErrMsg = null;
-        this.listingBidIsValid = true;
+        this.startingBidErrMsg = null;
+        this.startingBidIsValid = true;
       }
     },
     validateStartDate() {
@@ -185,12 +186,37 @@ export default {
         this.listingImageIsValid = false;
       }
         
-      if (this.listingImageIsValid && this.listingNameIsValid && this.listingDescIsValid && this.listingBidIsValid && this.startDateIsValid && this.endDateIsValid) {
+      if (this.listingImageIsValid && this.listingNameIsValid && this.listingDescIsValid && this.startingBidIsValid && this.startDateIsValid && this.endDateIsValid) {
         this.newListing();
       }
     },
     newListing() {
-      console.log("Success")
+      var reader = new FileReader();
+      reader.readAsDataURL(this.listingImage);
+      reader.onload = () => {
+        var base64String = reader.result.replace('data:', '').replace(/^.+,/, '');
+
+        var listing = {
+          auction_start_datetime: this.startDate,
+          auction_end_datetime: this.endDate,
+          listing_description: this.listingDesc,
+          listing_image: {
+            name: this.listingImage.name,
+            type: this.listingImage.type,
+            image: base64String
+          },
+          listing_name: this.listingName,
+          starting_bid: this.startingBid
+        };
+
+        axios.post('http://127.0.0.1:5000/listing', {data: listing})
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.log(error)
+        });
+      }
     }
   }
 }
