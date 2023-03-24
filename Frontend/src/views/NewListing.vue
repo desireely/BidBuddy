@@ -7,43 +7,46 @@
           <div class="card">
             <img :src="listingImgURL" class="card-img-top"/>
             <label for="img-upload" class="custom-file-upload">
-              <br/><br/><br/>{{uploadTxt}}
+              <br/><br/><br/>"{{uploadTxt}}"
             </label>
-            <input id="img-upload" type="file" accept="image/*" @change="displayImg"/>
+            <input id="img-upload" type="file" accept="image/*" @change="displayImg" :class="{'form-control': true, 'is-invalid': !listingImageIsValid}"/>
+            <div class="invalid-feedback">
+              Please upload an image.
+            </div>
           </div>
         </div>
         <div class="col-8">
             <div class="mb-3">
               <label for="listing-name" class="form-label">Listing Name</label>
-              <input type="text" :class="{'form-control': true, 'is-invalid': !listingNameIsValid}" v-model="listingName" id="listing-name">
+              <input type="text" :class="{'form-control': true, 'is-invalid': !listingNameIsValid}" v-model="listingName" id="listing-name" @change="validateName()">
               <div class="invalid-feedback">
                 {{listingNameErrMsg}}
               </div>
             </div>
             <div class="mb-3">
               <label for="listing-description" class="form-label">Listing Decription</label>
-              <textarea :class="{'form-control': true, 'is-invalid': !listingDescIsValid}" v-model="listingDesc" id="listing-description"></textarea>
+              <textarea :class="{'form-control': true, 'is-invalid': !listingDescIsValid}" v-model="listingDesc" id="listing-description" @change="validateDesc()"></textarea>
               <div class="invalid-feedback">
                 {{listingDescErrMsg}}
               </div>
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon1">$</span>
-              <input type="number" min="0" :class="{'form-control': true, 'is-invalid': !listingBidIsValid}" v-model="listingBid" placeholder="Starting Bid">
+              <input type="number" min="0" :class="{'form-control': true, 'is-invalid': !listingBidIsValid}" v-model="listingBid" placeholder="Starting Bid" @change="validateBid()">
               <div class="invalid-feedback">
                 {{listingBidErrMsg}}
               </div>
             </div>
             <div class="mb-3">
               <label for="starting-date" class="form-label">Bidding Start Date</label>
-              <input type="datetime-local" :class="{'form-control': true, 'is-invalid': !startDateIsValid}" v-model="startDate" class="form-control" id="starting-date">
+              <input type="datetime-local" :class="{'form-control': true, 'is-invalid': !startDateIsValid}" v-model="startDate" class="form-control" id="starting-date" @change="validateStartDate()">
               <div class="invalid-feedback">
                 {{startDateErrMsg}}
               </div>
             </div>
             <div class="mb-3">
               <label for="ending-date" class="form-label">Bidding End Date</label>
-              <input type="datetime-local" :class="{'form-control': true, 'is-invalid': !endDateIsValid}" v-model="endDate" id="ending-date">
+              <input type="datetime-local" :class="{'form-control': true, 'is-invalid': !endDateIsValid}" v-model="endDate" id="ending-date" @change="validateEndDate()">
               <div class="invalid-feedback">
                 {{endDateErrMsg}}
               </div>
@@ -65,6 +68,8 @@ export default {
     return {
       listingImgURL: 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a',
       uploadTxt: "Upload an Image",
+      listingImage: null,
+      listingImageIsValid: true,
 
       listingName: null,
       listingNameIsValid: true,
@@ -88,51 +93,71 @@ export default {
     }
   },
   methods: {
+    resetInputs() {
+      [this.listingImage, this.listingName, this.listingDesc, this.listingBid, this.startDate, this.endDate] = [null, null, null, null, null, null];
+      [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.listingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true, true];
+      [this.listingNameErrMsg, this.listingDescErrMsg, this.listingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
+    },
     displayImg(event) {
-      var img = event.target.files[0];
-      if (img.type.startsWith('image/')) {
-        this.listingImgURL = URL.createObjectURL(img);
+      this.listingImage = event.target.files[0];
+      if (this.listingImage.type.startsWith('image/')) {
+        this.listingImgURL = URL.createObjectURL(this.listingImage);
         if (this.listingImgURL == 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a') {
           this.uploadTxt = "Upload an Image";
         } else {
           this.uploadTxt = "";
         }
+        this.listingImageIsValid = true;
       } else {
-          this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a'
-          this.uploadTxt = "Please upload an image file!";
+        this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a'
+        this.listingImage = null;
+        this.listingImageIsValid = false;
+        this.uploadTxt = "Upload an Image";
       }
     },
-    validate() {
-      // [this.listingName, this.listingDesc, this.listingBid, this.startDate, this.endDate] = [null, null, null, null, null];
-      [this.listingNameIsValid, this.listingDescIsValid, this.listingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true];
-      [this.listingNameErrMsg, this.listingDescErrMsg, this.listingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
-
+    validateName() {
       if (!this.listingName) {
         this.listingNameErrMsg = "Field is required.";
         this.listingNameIsValid = false;
+      } else {
+        this.listingNameErrMsg = null;
+        this.listingNameIsValid = true;
       }
-
+    },
+    validateDesc() {
       if (!this.listingDesc) {
         this.listingDescErrMsg = "Field is required.";
         this.listingDescIsValid = false;
+      } else {
+        this.listingDescErrMsg = null;
+        this.listingDescIsValid = true;
       }
-
+    },
+    validateBid() {
       if (!this.listingBid && this.listingBid != 0) {
         this.listingBidErrMsg = "Field is required.";
         this.listingBidIsValid = false;
       } else if (isNaN(this.listingBid) || this.listingBid < 0) {
         this.listingBidErrMsg = "Please enter a valid starting bid.";
         this.listingBidIsValid = false;
+      } else {
+        this.listingBidErrMsg = null;
+        this.listingBidIsValid = true;
       }
-
+    },
+    validateStartDate() {
       if (!this.startDate) {
         this.startDateErrMsg = "Field is required.";
         this.startDateIsValid = false;
       } else if (new Date(this.startDate) < new Date()) {
         this.startDateErrMsg = "Start date has already passed.";
         this.startDateIsValid = false;
+      } else {
+        this.startDateErrMsg = null;
+        this.startDateIsValid = true;
       }
-
+    },
+    validateEndDate() {
       if (!this.endDate) {
         this.endDateErrMsg = "Field is required.";
         this.endDateIsValid = false;
@@ -143,13 +168,29 @@ export default {
         if (new Date(this.endDate) <= new Date(this.startDate)) {
           this.endDateErrMsg = "End date must be after start date.";
           this.endDateIsValid = false;
+        } else {
+          this.endDateErrMsg = null;
+          this.endDateIsValid = true;
         }
       }
-      
-      this.newListing();
+    },
+    validate() {
+      this.validateName();
+      this.validateDesc();
+      this.validateBid();
+      this.validateStartDate();
+      this.validateEndDate();
+
+      if (!this.listingImage) {
+        this.listingImageIsValid = false;
+      }
+        
+      if (this.listingImageIsValid && this.listingNameIsValid && this.listingDescIsValid && this.listingBidIsValid && this.startDateIsValid && this.endDateIsValid) {
+        this.newListing();
+      }
     },
     newListing() {
-      
+      console.log("Success")
     }
   }
 }
