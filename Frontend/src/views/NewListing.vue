@@ -207,7 +207,13 @@ export default {
       this.validateBid();
       this.validateStartDate();
       this.validateEndDate();
-        
+      
+      if (this.listingImage) {
+        this.listingImageIsValid = true;
+      } else {
+        this.listingImageIsValid = false;
+      }
+
       if (this.listingImageIsValid && this.listingNameIsValid && this.listingDescIsValid && this.startingBidIsValid && this.startDateIsValid && this.endDateIsValid) {
         this.newListing();
       }
