@@ -135,7 +135,10 @@ export default {
       }
     },
     validateBid() {
-      if (!this.startingBid && this.startingBid != 0) {
+      if (String(this.startingBid) == "0") {
+        this.startingBidErrMsg = null;
+        this.startingBidIsValid = true;
+      } else if (!this.startingBid) {
         this.startingBidErrMsg = "Field is required.";
         this.startingBidIsValid = false;
       } else if (isNaN(this.startingBid) || this.startingBid < 0) {
