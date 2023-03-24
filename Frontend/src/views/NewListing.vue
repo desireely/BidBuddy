@@ -118,7 +118,6 @@ export default {
       this.$refs.imgInput.value = null;
     },
     displayImg(event) {
-      console.log(event.target.files[0])
       if (event.target.files[0]) {
         if (event.target.files[0].type.startsWith('image/')) {
           this.listingImage = event.target.files[0];
