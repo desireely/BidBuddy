@@ -37,6 +37,22 @@ export default {
         .then(function() {
           const user = auth.currentUser;
           console.log(user);
+
+          auth.onAuthStateChanged(function(user) {
+            if (user) {
+              user.getIdToken().then(function(token) {
+                // Use the token here
+                console.log(token)
+                sessionStorage.setItem('token', token);
+                const userid = user.uid
+                sessionStorage.setItem('userid', userid);
+                console.log(userid)
+              }).catch(function(error) {
+                // Handle error here
+                console.log(error.message)
+              });
+            }
+          });
         })
         .catch(function(error) {
           console.log(error.message);
