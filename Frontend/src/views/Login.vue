@@ -5,14 +5,21 @@
       <form>
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="email" v-model="email">
+          <input type="email" :class="{ 'form-control': true, 'is-invalid': !emailIsValid }" id="email" v-model="email">
+          <div class="invalid-feedback">
+            {{ emailErrMsg }}
+          </div>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" v-model="password">
+          <input type="password" :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
+          <div class="invalid-feedback">
+            {{ passwordErrMsg }}
+          </div>
         </div>
         <div class="text-end">
-          <button class="btn btn-outline-dark" @click="login">Submit</button>
+          <button class="btn btn-outline-dark" @click="login" v-if="email && password">Submit</button>
+          <button class="btn btn-outline-dark" disabled v-else>Submit</button>
         </div>
       </form>
     </div>
@@ -28,11 +35,19 @@ export default {
     return {
       email: null,
       password: null,
+
+      emailIsValid: true,
+      passwordIsValid: true,
+
+      emailErrMsg: null,
+      passwordErrMsg: null,
     };
   },
   methods: {
     login() {
       event.preventDefault();
+      [this.emailIsValid, this.passwordIsValid, this.emailErrMsg, this.passwordErrMsg] = [true, true, null, null];
+
       auth.signInWithEmailAndPassword(this.email, this.password)
         .then(function() {
           const user = auth.currentUser;
@@ -54,8 +69,27 @@ export default {
             }
           });
         })
-        .catch(function(error) {
-          console.log(error.message);
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+
+          switch (errorCode) {
+            case 'auth/invalid-email':
+              this.emailErrMsg = "Invalid email format.";
+              this.emailIsValid = false;
+              break;
+            case 'auth/user-not-found':
+              this.emailErrMsg = "We couldn't find an account with that email.";
+              this.emailIsValid = false;
+              break;
+            case 'auth/wrong-password':
+              this.passwordErrMsg = "Your account or password is incorrect.";
+              this.passwordIsValid = false;
+              break;
+            // Handle other error codes as needed
+            default:
+              console.log(errorMessage);
+          }
         });
     }
   }
