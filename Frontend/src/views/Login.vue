@@ -5,14 +5,14 @@
       <form>
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="email">
+          <input type="email" class="form-control" id="email" v-model="email">
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password">
+          <input type="password" class="form-control" id="password" v-model="password">
         </div>
         <div class="text-end">
-          <button type="submit" class="btn btn-outline-dark">Submit</button>
+          <button class="btn btn-outline-dark" @click="login">Submit</button>
         </div>
       </form>
     </div>
@@ -20,12 +20,29 @@
 </template>
 
 <script>
+import {auth} from "../../firebaseConfig.js"
+
 export default {
   name: 'Login',
   data() {
     return {
+      email: null,
+      password: null,
     };
   },
+  methods: {
+    login() {
+      event.preventDefault();
+      auth.signInWithEmailAndPassword(this.email, this.password)
+        .then(function() {
+          const user = auth.currentUser;
+          console.log(user);
+        })
+        .catch(function(error) {
+          console.log(error.message);
+        });
+    }
+  }
 }
 </script>
 
