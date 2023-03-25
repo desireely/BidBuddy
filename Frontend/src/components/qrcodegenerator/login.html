@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Buyer Sign In</title>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <!-- Page Content-->
+        <div class='container-fluid bg-image d-flex align-items-center justify-content-center' style="background-image: url('./there-is-no-planet-B.jpg');height: 100vh;">
+            <div class='row'>
+                <div class='col'>
+                    <div class='container p-3 bg-light'>
+                        <div class='row text-center mb-3'>
+                            <div class='col'>
+                                <h1 class="fw-bold">Log in</h1> 
+                            </div> <!-- col -->
+                        </div> <!-- row -->
+
+                        <div class='row mb-2'>
+                            <div class='col'>
+                                <!-- <form> -->
+                                    <div class="mb-3">
+                                      <label for="email" class="form-label">Email address</label>
+                                      <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="password" class="form-label">Password</label>
+                                      <input type="password" class="form-control" id="password">
+                                    </div>
+                                    
+                                    <button type="submit" id="login" onclick="login()" class="btn btn-primary w-100 rounded-pill">Log in</button>
+                                    <br>    
+                                    <label id="testDisplay"></label>
+                                  <!-- </form> -->
+                            </div> <!-- col -->
+                        </div> <!-- row -->
+                        <!-- <hr>
+                        <div class="row">
+                            <div class="col-4"> -->
+                                <!-- In the callback, you would hide the gSignInWrapper element on a
+                                successful sign in -->
+                                <!-- <div id="gSignInWrapper">
+                                    <div id="customBtn" class="customGPlusSignIn w-100">
+                                        <span class="icon"></span>
+                                        <span class="buttonText">Google</span>
+                                    </div>
+                                </div>
+                                <div id="name"></div>
+                            </div>
+                            <div class="col-4">
+                                <div id="customBtnApple" class="w-100">
+                                    <span id="appleIcon"></span>
+                                    <span class="buttonText">Apple</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div id="customBtnFb" class="w-100">
+                                    <span id="fbIcon"></span>
+                                    <span class="buttonText">Facebook</span>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div> <!-- container -->
+                    
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+        
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; G1T3 2022</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+
+    <script>
+        function login(){
+            const currentUrl = window.location.href;
+            console.log(currentUrl);
+        
+            axios.post('http://127.0.0.1:5000/test1', { 'url': currentUrl})
+                .then(response => {
+                    // handle the response from the microservice
+                    console.log("it works")
+                    console.log(response.data)
+                    console.log(typeof(response.data))
+                    document.getElementById("testDisplay").innerText = "seller_id" + " : " + response.data["seller_id"] + " , " + "listing_id" + " : " + response.data["listing_id"];
+                })
+                .catch(error => {
+                    // handle any errors that occurred during the request
+                    console.log("something went wrong with the login", error)
+                });
+        }
+        
+
+    </script>
+
+
+
+</html>
