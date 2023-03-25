@@ -19,7 +19,7 @@
         </div>
         <div class="text-end">
           <button class="btn btn-outline-dark" @click="login" v-if="email && password">Submit</button>
-          <button class="btn btn-outline-dark" disabled v-else>Submit</button>
+          <button class="btn btn-outline-secondary" disabled v-else>Submit</button>
         </div>
       </form>
     </div>
