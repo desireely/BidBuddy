@@ -32,7 +32,8 @@
 </template>
 
 <script>
-import {auth} from "../../firebaseConfig.js"
+import { auth } from "../../firebaseConfig.js"
+import router from "../router";
 
 export default {
   name: 'Login',
@@ -69,6 +70,7 @@ export default {
                 const userid = user.uid
                 sessionStorage.setItem('userid', userid);
                 console.log(userid)
+                router.pushReload({ name: 'Home' });
               }).catch(function(error) {
                 // Handle error here
                 console.log(error.message)
