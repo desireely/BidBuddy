@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>QR Code Generator Test</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+	<h1>QR Code Generator Test</h1>
+	<button type="submit" onclick="invoke_qrcodegenerator()">Generate QR Code</button>
+	<div id="qr-code-container"></div>
+	<script>
+		// Handle form submission and display generated QR code
+    // function invoke_qrcodegenerator() {
+    //   fetch('http://localhost:5000/test', {
+    //     method: 'POST',
+    //     // headers: {
+    //     //   'Content-Type': 'application/json'
+    //     // },
+    //     // body: JSON.stringify({
+    //     //   // request payload data goes here
+    //     // })
+    //   })
+    //   .then(response => {
+    //     // handle the response from the microservice
+    //     console.log("it works")
+    //     console.log(response.data)
+    //   })
+    //   .catch(error => {
+    //     // handle any errors that occurred during the request
+    //     console.log("something went wrong with the invoke_qrcodegenerator")
+    //   });
+    // }
+
+
+    function invoke_qrcodegenerator(){
+      axios.post('http://127.0.0.1:5000/qrcode')
+        .then(response => {
+          // handle the response from the microservice
+          console.log("it works")
+          console.log(response.data)
+
+			    // const blob = response.data.blob();
+			    // const img = document.createElement('img');
+			    // img.src = URL.createObjectURL(blob);
+			    // document.querySelector('#qr-code-container').appendChild(img);
+          document.getElementById("qr-code-container").innerHTML = response.data;
+          })
+        .catch(error => {
+          // handle any errors that occurred during the request
+          console.log("something went wrong with the invoke_qrcodegenerator", error)
+        });
+    }
+	</script>
+</body>
+</html>
