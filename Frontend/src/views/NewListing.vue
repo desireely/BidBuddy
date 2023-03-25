@@ -3,61 +3,68 @@
     <h1>New Listing</h1>
     <div class="container">
       <div class="row">
-        <div class="col-4 mb-3">
+        <div class="col-4 my-auto">
           <div class="card">
-            <img :src="listingImgURL" class="card-img-top"/>
+            <img :src="listingImgURL" class="card-img-top" />
             <label for="img-upload" class="custom-file-upload">
-              <br/><br/><br/>{{uploadTxt}}
+              <br /><br /><br />{{ uploadTxt }}
             </label>
-            <input id="img-upload" type="file" accept="image/*" @change="displayImg" :class="{'form-control': true, 'is-invalid': !listingImageIsValid}" ref="imgInput"/>
+            <input id="img-upload" type="file" accept="image/*" @change="displayImg"
+              :class="{ 'form-control': true, 'is-invalid': !listingImageIsValid }" ref="imgInput" />
             <div class="invalid-feedback">
               Please upload an image.
             </div>
           </div>
         </div>
         <div class="col-8">
-            <div class="mb-3">
-              <label for="listing-name" class="form-label">Listing Name</label>
-              <input type="text" :class="{'form-control': true, 'is-invalid': !listingNameIsValid}" v-model="listingName" id="listing-name" @change="validateName()">
-              <div class="invalid-feedback">
-                {{listingNameErrMsg}}
-              </div>
+          <div class="mb-3">
+            <label for="listing-name" class="form-label">Listing Name</label>
+            <input type="text" :class="{ 'form-control': true, 'is-invalid': !listingNameIsValid }" v-model="listingName"
+              id="listing-name" @change="validateName()">
+            <div class="invalid-feedback">
+              {{ listingNameErrMsg }}
             </div>
-            <div class="mb-3">
-              <label for="listing-description" class="form-label">Listing Decription</label>
-              <textarea :class="{'form-control': true, 'is-invalid': !listingDescIsValid}" v-model="listingDesc" id="listing-description" @change="validateDesc()"></textarea>
-              <div class="invalid-feedback">
-                {{listingDescErrMsg}}
-              </div>
+          </div>
+          <div class="mb-3">
+            <label for="listing-description" class="form-label">Listing Decription</label>
+            <textarea :class="{ 'form-control': true, 'is-invalid': !listingDescIsValid }" v-model="listingDesc"
+              id="listing-description" @change="validateDesc()"></textarea>
+            <div class="invalid-feedback">
+              {{ listingDescErrMsg }}
             </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1">$</span>
-              <input type="number" min="0" :class="{'form-control': true, 'is-invalid': !startingBidIsValid}" v-model="startingBid" placeholder="Starting Bid" @change="validateBid()">
-              <div class="invalid-feedback">
-                {{startingBidErrMsg}}
-              </div>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">$</span>
+            <input type="number" min="0" :class="{ 'form-control': true, 'is-invalid': !startingBidIsValid }"
+              v-model="startingBid" placeholder="Starting Bid" @change="validateBid()">
+            <div class="invalid-feedback">
+              {{ startingBidErrMsg }}
             </div>
-            <div class="mb-3">
-              <label for="starting-date" class="form-label">Bidding Start Date</label>
-              <input type="datetime-local" :class="{'form-control': true, 'is-invalid': !startDateIsValid}" v-model="startDate" class="form-control" id="starting-date" @change="validateStartDate()">
-              <div class="invalid-feedback">
-                {{startDateErrMsg}}
-              </div>
+          </div>
+          <div class="mb-3">
+            <label for="starting-date" class="form-label">Bidding Start Date</label>
+            <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !startDateIsValid }"
+              v-model="startDate" class="form-control" id="starting-date" @change="validateStartDate()">
+            <div class="invalid-feedback">
+              {{ startDateErrMsg }}
             </div>
-            <div class="mb-3">
-              <label for="ending-date" class="form-label">Bidding End Date</label>
-              <input type="datetime-local" :class="{'form-control': true, 'is-invalid': !endDateIsValid}" v-model="endDate" id="ending-date" @change="validateEndDate()">
-              <div class="invalid-feedback">
-                {{endDateErrMsg}}
-              </div>
+          </div>
+          <div class="mb-3">
+            <label for="ending-date" class="form-label">Bidding End Date</label>
+            <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !endDateIsValid }"
+              v-model="endDate" id="ending-date" @change="validateEndDate()">
+            <div class="invalid-feedback">
+              {{ endDateErrMsg }}
             </div>
+          </div>
         </div>
         <div class="text-end">
           <button @click="validate()" class="btn btn-outline-dark">Create</button>
         </div>
       </div>
 
-      <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true" ref="successModal">
+      <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true"
+        ref="successModal">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
@@ -207,7 +214,7 @@ export default {
       this.validateBid();
       this.validateStartDate();
       this.validateEndDate();
-      
+
       if (this.listingImage) {
         this.listingImageIsValid = true;
       } else {
@@ -237,17 +244,17 @@ export default {
           starting_bid: this.startingBid
         };
 
-        axios.post('http://127.0.0.1:5000/listing', {data: listing})
-        .then(response => {
-          console.log(response.data)
-          this.resetInputs();
-          var myModal = new bootstrap.Modal(this.$refs.successModal)
-          var modalToggle = this.$refs.successModal;
-          myModal.show(modalToggle);
-        })
-        .catch(error => {
-          console.log(error)
-        });
+        axios.post('http://127.0.0.1:5000/listing', { data: listing })
+          .then(response => {
+            console.log(response.data)
+            this.resetInputs();
+            var myModal = new bootstrap.Modal(this.$refs.successModal)
+            var modalToggle = this.$refs.successModal;
+            myModal.show(modalToggle);
+          })
+          .catch(error => {
+            console.log(error)
+          });
       }
     }
   }
@@ -255,18 +262,19 @@ export default {
 </script>
 
 <style>
-  input[type="file"] {
-    display: none;
-  }
-  .custom-file-upload {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
