@@ -10,9 +10,14 @@
             {{ emailErrMsg }}
           </div>
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group mb-3">
+          <input :type="showPassword ? 'text' : 'password'" :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
+          <div class="input-group-append">
+            <button class="input-group-text" type="button" id="togglePassword" @click="showPassword = !showPassword">
+              <i v-bind:class="[showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill']"></i>
+            </button>
+          </div>
           <div class="invalid-feedback">
             {{ passwordErrMsg }}
           </div>
@@ -33,6 +38,8 @@ export default {
   name: 'Login',
   data() {
     return {
+      showPassword: false,
+
       email: null,
       password: null,
 
