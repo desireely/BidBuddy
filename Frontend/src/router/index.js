@@ -9,6 +9,8 @@ import Login from "../views/Login.vue";
 import ListingInfo from "../views/ListingInfo.vue";
 import NoResults from "../views/NoResults.vue";
 
+import { auth } from "../../firebaseConfig.js";
+
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     // always scroll to top
@@ -20,21 +22,25 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: Home,
+      beforeEnter: guardMyroute,
     },
     {
       path: "/mylistings",
       name: "My Listings",
       component: MyListings,
+      beforeEnter: guardMyroute,
     },
     {
       path: "/mybids",
       name: "My Bids",
       component: MyBids,
+      beforeEnter: guardMyroute,
     },
     {
       path: "/newlisting",
       name: "New Listing",
       component: NewListing,
+      beforeEnter: guardMyroute,
     },
     {
       path: "/signup",
@@ -50,13 +56,30 @@ const router = createRouter({
       path: "/listinginfo",
       name: "Listing Info",
       component: ListingInfo,
+      beforeEnter: guardMyroute,
     },
     {
       path: "/noresults",
       name: "No Results",
       component: NoResults,
+      beforeEnter: guardMyroute,
     },
   ],
 });
+
+function guardMyroute(to, from, next) {
+  auth.onAuthStateChanged(async (user) => {
+    if (user === null) {
+      next("/login");
+    } else {
+      next();
+    }
+  });
+}
+
+router.pushReload = async function (location) {
+  await this.push(location);
+  window.location.reload();
+};
 
 export default router;
