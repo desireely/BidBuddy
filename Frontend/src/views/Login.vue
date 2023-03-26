@@ -12,7 +12,8 @@
         </div>
         <label for="password" class="form-label">Password</label>
         <div class="input-group mb-3">
-          <input :type="showPassword ? 'text' : 'password'" :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
+          <input :type="showPassword ? 'text' : 'password'"
+            :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
           <div class="input-group-append">
             <button class="input-group-text" type="button" id="togglePassword" @click="showPassword = !showPassword">
               <i v-bind:class="[showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill']"></i>
@@ -57,13 +58,13 @@ export default {
       [this.emailIsValid, this.passwordIsValid, this.emailErrMsg, this.passwordErrMsg] = [true, true, null, null];
 
       auth.signInWithEmailAndPassword(this.email, this.password)
-        .then(function() {
+        .then(function () {
           const user = auth.currentUser;
           console.log(user);
 
-          auth.onAuthStateChanged(function(user) {
+          auth.onAuthStateChanged(function (user) {
             if (user) {
-              user.getIdToken().then(function(token) {
+              user.getIdToken().then(function (token) {
                 // Use the token here
                 console.log(token)
                 sessionStorage.setItem('token', token);
@@ -71,7 +72,7 @@ export default {
                 sessionStorage.setItem('userid', userid);
                 console.log(userid)
                 router.pushReload({ name: 'Home' });
-              }).catch(function(error) {
+              }).catch(function (error) {
                 // Handle error here
                 console.log(error.message)
               });

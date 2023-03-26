@@ -39,7 +39,7 @@
             </li>
           </ul>
         </div>
-        <div :class="{'col-10': userID, 'p-0': true}">
+        <div :class="{ 'col-10': userID, 'p-0': true }">
           <!-- Top navbar -->
           <div class="container-fluid p-0 border-bottom">
             <nav class="navbar navbar-expand-lg">
@@ -80,27 +80,27 @@
 
 
 <script>
-  import { auth } from "../firebaseConfig.js"
-  import router from "./router";
+import { auth } from "../firebaseConfig.js"
+import router from "./router";
 
-  export default {
-    computed: {
-      userID() {
-        return !!sessionStorage.getItem('userid')
-      }
-    },
-    methods: {
-      logout() {
-        auth.signOut()
-        .then(function(){
+export default {
+  computed: {
+    userID() {
+      return !!sessionStorage.getItem('userid')
+    }
+  },
+  methods: {
+    logout() {
+      auth.signOut()
+        .then(function () {
           console.log("Logged Out")
           sessionStorage.clear();
           router.pushReload({ name: 'Login' });
         })
-        .catch(function(error){
+        .catch(function (error) {
           console.log(error.message)
         })
-      }
     }
   }
+}
 </script>

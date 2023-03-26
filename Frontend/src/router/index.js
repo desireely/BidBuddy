@@ -9,7 +9,7 @@ import Login from "../views/Login.vue";
 import ListingInfo from "../views/ListingInfo.vue";
 import NoResults from "../views/NoResults.vue";
 
-import { auth } from "../../firebaseConfig.js"
+import { auth } from "../../firebaseConfig.js";
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -77,9 +77,9 @@ function guardMyroute(to, from, next) {
   });
 }
 
-router.pushReload = async function(location) {
-  await this.push(location)
-  window.location.reload()
-}
+router.pushReload = async function (location) {
+  await this.push(location);
+  window.location.reload();
+};
 
 export default router;
