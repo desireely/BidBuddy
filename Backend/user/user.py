@@ -18,7 +18,7 @@ CORS(app)
 #To get details of user
 @app.route("/user/<string:userid>")
 def find_by_userid(userid):
-    if check_auth():
+    # if check_auth():
         query = db.collection('users').where("userid", "==", userid).limit(1)
         user = query.get()
         if len(user):
@@ -31,16 +31,17 @@ def find_by_userid(userid):
         return jsonify(
             {
                 "code": 404,
+                "data" : '',
                 "message": "User not found."
             }
         ), 404
-    else:
-        return jsonify(
-            {
-                "code": 401,
-                "message": "Unauthorised."
-            }
-        ), 401
+    # else:
+    #     return jsonify(
+    #         {
+    #             "code": 401,
+    #             "message": "Unauthorised."
+    #         }
+    #     ), 401
 
 #To create a new user
 @app.route("/user", methods=['POST'])
@@ -108,7 +109,7 @@ def create_user():
 #To update the user details
 @app.route("/user/<string:userid>", methods=['PUT'])
 def update_user(userid):
-    if check_auth():
+    # if check_auth():
         data = request.get_json()
         try:
             query = db.collection('users').where("userid", "==", userid).limit(1)
@@ -136,17 +137,17 @@ def update_user(userid):
                 "data": updated_user.to_dict()
             }
         )
-    else:
-        return jsonify(
-            {
-                "code": 401,
-                "message": "Unauthorised."
-            }
-        ), 401
+    # else:
+    #     return jsonify(
+    #         {
+    #             "code": 401,
+    #             "message": "Unauthorised."
+    #         }
+    #     ), 401
 
 @app.route("/user/<string:userid>", methods=['DELETE'])
 def delete_user(userid):
-    if check_auth():
+    # if check_auth():
         try:
             #Delete data from firestore
             query = db.collection('users').where("userid","==",userid).limit(1)
@@ -179,24 +180,24 @@ def delete_user(userid):
                     "message": f"An error occurred while deleting user: {str(e)}"
                 }
             ), 500
-    else:
-        return jsonify(
-            {
-                "code": 401,
-                "message": "Unauthorised."
-            }
-        ), 401
+    # else:
+    #     return jsonify(
+    #         {
+    #             "code": 401,
+    #             "message": "Unauthorised."
+    #         }
+    #     ), 401
         
 
-def check_auth():
-    # Get the Firebase ID token from the request header
-    try:
-        # Verify the Firebase ID token
-        id_token = request.headers.get('Authorization')
-        auth.verify_id_token(id_token)
-        return True
-    except:
-        return False
+# def check_auth():
+#     # Get the Firebase ID token from the request header
+#     try:
+#         # Verify the Firebase ID token
+#         id_token = request.headers.get('Authorization')
+#         auth.verify_id_token(id_token)
+#         return True
+#     except:
+#         return False
 
 def verify_info(email,password):
     if re.match(email_regex, email) and len(password) >= 6:
