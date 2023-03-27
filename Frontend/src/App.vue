@@ -43,6 +43,8 @@
           <!-- Top navbar -->
           <div class="container-fluid p-0 border-bottom">
             <nav class="navbar navbar-expand-lg">
+              <h3 v-if="!userID" class="d-flex align-items-center p-1 text-dark text-decoration-none text-center">
+                BidBuddy</h3>
               <div class="col-3">
                 <div class="input-group p-1 mx-3">
                   <span class="input-group-text bg-white border border-end-0" id="search">

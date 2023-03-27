@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="pb-3">Listings</h1>
-    <div class="row d-flex justify-content-between mx-4">
+    <div class="row d-flex mx-2">
       <ItemCard v-for="listing in this.listings" :listingData="listing" />
     </div>
   </div>
