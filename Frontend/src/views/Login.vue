@@ -38,6 +38,10 @@ import router from "../router";
 
 export default {
   name: 'Login',
+  props: {
+    user: Object,
+    token: Object
+  },
   data() {
     return {
       showPassword: false,
@@ -57,6 +61,7 @@ export default {
       event.preventDefault();
       [this.emailIsValid, this.passwordIsValid, this.emailErrMsg, this.passwordErrMsg] = [true, true, null, null];
 
+      const self = this;
       auth.signInWithEmailAndPassword(this.email, this.password)
         .then(function () {
           const user = auth.currentUser;
@@ -66,11 +71,7 @@ export default {
             if (user) {
               user.getIdToken().then(function (token) {
                 // Use the token here
-                console.log(token)
-                sessionStorage.setItem('token', token);
-                const userid = user.uid
-                sessionStorage.setItem('userid', userid);
-                console.log(userid)
+                console.log(self.user.uid)
                 router.pushReload({ name: 'Home' });
               }).catch(function (error) {
                 // Handle error here

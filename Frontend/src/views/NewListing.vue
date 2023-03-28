@@ -87,6 +87,10 @@
 import axios from 'axios';
 export default {
   name: 'NewListing',
+  props: {
+    user: Object,
+    token: Object
+  },
   data() {
     return {
       listingImgURL: 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a',
@@ -232,6 +236,7 @@ export default {
         var base64String = reader.result.replace('data:', '').replace(/^.+,/, '');
 
         var listing = {
+          userid: this.user.uid,
           auction_start_datetime: this.startDate,
           auction_end_datetime: this.endDate,
           listing_description: this.listingDesc,

@@ -46,6 +46,10 @@
 import axios from 'axios';
 export default {
   name: 'ListingInfo',
+  props: {
+    user: Object,
+    token: Object
+  },
   data() {
     return {
       listingId: null,
@@ -112,7 +116,7 @@ export default {
         this.bidPriceIsValid = true;
         const bidDetails = {
           listing_id: this.listingID,
-          user_id: sessionStorage.getItem('userid'),
+          user_id: this.user.uid,
           bid_price: Number(this.bidPrice),
         }
         console.log(bidDetails)

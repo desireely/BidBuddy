@@ -10,7 +10,11 @@
 
 <script>
 export default {
-  name: 'MyBids'
+  name: 'MyBids',
+  props: {
+    user: Object,
+    token: Object
+  },
 }
 </script>
 
