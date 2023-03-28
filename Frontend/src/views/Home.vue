@@ -12,6 +12,10 @@ import axios from 'axios';
 import ItemCard from "../components/ItemCard.vue";
 export default {
   name: 'Home',
+  props: {
+    user: Object,
+    token: Object
+  },
   data() {
     return {
       listings: [],
