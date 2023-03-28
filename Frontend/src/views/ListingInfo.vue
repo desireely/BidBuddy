@@ -2,8 +2,8 @@
   <div>
     <h1>{{ listingInfo.listing_name }}</h1>
     <div class="container p-3">
-      <div class="row my-3">
-        <h4>Highest Current Bid: {{ listingInfo.highest_current_bid }}</h4>
+      <div class="row">
+        <h4>Highest Current Bid: ${{ listingInfo.highest_current_bid }}</h4>
         <p class="mb-3 fw-medium fs-5">Auction Ends on <span class="fw-medium">{{
           timeConverter(listingInfo.auction_end_datetime) }}</span></p>
       </div>
@@ -65,17 +65,20 @@ export default {
       var hour = a.getHours();
       var time = "";
       if (hour > 12) {
+        hour = hour - 12
         time = "pm"
       } else {
         time = "am"
       }
       var min = a.getMinutes();
-      if (min == 0) {
-        min = "00"
+      if (min.toString().length == 1) {
+        min = min.toString() + "0"
       }
+
       var sec = a.getSeconds();
-      // var formattedDate = date + '/' + a.getMonth() + '/' + year + ' (' + (hour - 12) + "." + min + time + ")";
-      var formattedDate = date + ' ' + month + ' ' + year + ' (' + hour + ':' + min + time + ")";
+      var formattedDate = date + '/' + a.getMonth() + '/' + year + ' (' + (hour) + "." + min + time + ")";
+      // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min;
+      // console.log(time);
       return formattedDate;
     },
   },
