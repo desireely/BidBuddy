@@ -17,12 +17,24 @@
           {{ listingInfo.listing_description }}
         </div>
       </div>
-      <div class="mt-5 d-flex justify-content-end">
-        <div class="d-flex align-items-center me-2">
-          <span>$</span>
+      
+      <br/>
+      <div class="row">
+        <div class="col"></div>
+
+        <div class="col-2">
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">$</span>
+            <input type="text" :class="{ 'form-control': true, 'me-2': true, 'is-invalid': !bidPriceIsValid }" style="width: 10%" id="bid-price" v-model="bidPrice">
+            <div class="invalid-feedback text-nowrap">
+              {{ bidErrMsg }}
+            </div>
+          </div>
         </div>
-        <input type="text" class="form-control me-2" style="width: 10%" id="bid-price">
-        <button type="submit" class="btn btn-outline-dark">Place Bid</button>
+
+        <div class="col-auto">
+          <button @click="placeBid" class="btn btn-outline-dark">Place Bid</button>
+        </div>
       </div>
 
     </div>
@@ -36,15 +48,19 @@ export default {
   name: 'ListingInfo',
   data() {
     return {
+      listingId: null,
       listingInfo: [],
+      bidPrice: null,
+      bidErrMsg: null,
+      bidPriceIsValid: true,
     };
   },
   methods: {
     getListingInfo() {
       if (this.$route.query.listingID) {
-        var listingID = this.$route.query.listingID
-        console.log("LISTING ID:", listingID)
-        const path = 'http://127.0.0.1:5000/listing/' + listingID;
+        this.listingID = this.$route.query.listingID
+        console.log("LISTING ID:", this.listingID)
+        const path = 'http://127.0.0.1:5000/listing/' + this.listingID;
         console.log("PATH:", path)
         axios.get(path)
           .then((res) => {
@@ -80,6 +96,34 @@ export default {
       // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min;
       // console.log(time);
       return formattedDate;
+    },
+    placeBid() {
+      if (!this.bidPrice) {
+        this.bidErrMsg = "Please enter a bid price.";
+        this.bidPriceIsValid = false;
+      } else if (isNaN(this.bidPrice)) {
+        this.bidErrMsg = "Please enter a valid bid price.";
+        this.bidPriceIsValid = false;
+      } else if (this.bidPrice <= this.listingInfo.highest_current_bid) {
+        this.bidErrMsg = `Bid price must be higher than $${this.listingInfo.highest_current_bid}.`;
+        this.bidPriceIsValid = false;
+      } else {
+        this.bidErrMsg = null;
+        this.bidPriceIsValid = true;
+        const bidDetails = {
+          listing_id: this.listingID,
+          user_id: sessionStorage.getItem('userid'),
+          bid_price: this.bidPrice,
+        }
+        console.log(bidDetails)
+        axios.post('http://127.0.0.1:5015/bidforlisting', { data: bidDetails })
+          .then((res) => {
+            console.log(res.data.data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     },
   },
   created() {
