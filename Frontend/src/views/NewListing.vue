@@ -241,8 +241,9 @@ export default {
             image: base64String
           },
           listing_name: this.listingName,
-          starting_bid: this.startingBid
+          starting_bid: Number(this.startingBid)
         };
+        console.log(listing)
 
         axios.post('http://127.0.0.1:5000/listing', { data: listing })
           .then(response => {

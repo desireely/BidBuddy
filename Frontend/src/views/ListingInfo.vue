@@ -113,9 +113,10 @@ export default {
         const bidDetails = {
           listing_id: this.listingID,
           user_id: sessionStorage.getItem('userid'),
-          bid_price: this.bidPrice,
+          bid_price: Number(this.bidPrice),
         }
         console.log(bidDetails)
+        
         axios.post('http://127.0.0.1:5015/bidforlisting', { data: bidDetails })
           .then((res) => {
             console.log(res.data.data);
