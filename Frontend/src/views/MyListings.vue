@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>My Listings</h1>
-    <div class="row d-flex mx-2" v-if="listings">
+    <div class="row d-flex mx-2" v-if="listings && listings.length > 0">
       <ItemCard v-for="listing in this.listings" :listingData="listing" />
     </div>
     <div class="container-fluid d-flex justify-content-center align-items-center"
@@ -28,15 +28,15 @@ export default {
   },
   methods: {
     getUserListings() {
-      const path = `http://127.0.0.1:5000/listing/user/${this.user.uid}`;
+      const path = `http://127.0.0.1:5000/listing/user/99`;
       console.log(path)
 
       axios.get(path)
         .then((res) => {
-          if (res.data.data.listings) {
+          if (res.data.data) {
             this.listings = res.data.data.listings;
+            console.log(this.listings);
           }
-          console.log(this.listings);
         })
         .catch((error) => {
           console.error(error);
