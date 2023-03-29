@@ -53,7 +53,7 @@
                     <i class="bi bi-search"></i>
                   </span>
                   <input type="text" class="form-control border border-start-0" placeholder="Search" aria-label="Search"
-                    aria-describedby="search">
+                    aria-describedby="search" v-model="searchInput">
                 </div>
               </div>
               <div class="col-9 d-flex justify-content-end">
@@ -73,7 +73,7 @@
           </div>
           <!-- Contains the main content of the webpage-->
           <p style="padding: 20px; text-align: justify;">
-            <router-view :user="user" :token="token"></router-view>
+            <router-view :user="user" :token="token" :searchInput="searchInput"></router-view>
           </p>
 
         </div>
@@ -92,6 +92,7 @@ export default {
     return {
       user: null,
       token: null,
+      searchInput: null,
     }
   },
   created() {

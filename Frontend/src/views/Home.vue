@@ -2,7 +2,8 @@
   <div>
     <h1 class="pb-3">Listings</h1>
     <div class="row d-flex mx-2">
-      <ItemCard v-for="listing in this.listings" :listingData="listing" />
+      <ItemCard v-for="listing in this.filteredListings" :listingData="listing" v-if="filteredListings && filteredListings.length > 0"/>
+      <ItemCard v-for="listing in this.listings" :listingData="listing" v-else/>
     </div>
   </div>
 </template>
@@ -12,16 +13,23 @@ import axios from 'axios';
 import ItemCard from "../components/ItemCard.vue";
 export default {
   name: 'Home',
+  components: { ItemCard },
   props: {
     user: Object,
-    token: Object
+    token: Object,
+    searchInput: String,
   },
   data() {
     return {
       listings: [],
+      filteredListings: [],
     };
   },
-  components: { ItemCard },
+  watch: {
+    searchInput: function(newVal, oldVal) {
+      this.runSearch();
+    }
+  },
   methods: {
     getListings() {
       const path = 'http://127.0.0.1:5000/listing';
@@ -34,6 +42,19 @@ export default {
           console.error(error);
         });
     },
+    runSearch() {
+      if (this.searchInput) {
+        console.log(this.searchInput)
+        const keyword = this.searchInput.toLowerCase();
+        const filteredData = this.listings.filter(item => {
+          return item.listing_name.toLowerCase().includes(keyword);
+        });
+        
+        this.filteredListings = filteredData;
+      } else {
+        this.filteredListings = [];
+      }
+    }
   },
   created() {
     this.getListings();
