@@ -20,7 +20,7 @@ export default {
   components: { ItemCard },
   props: {
     user: Object,
-    token: Object,
+    token: String,
     searchInput: String,
   },
   data() {

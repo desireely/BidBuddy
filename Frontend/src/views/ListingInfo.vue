@@ -48,7 +48,7 @@ export default {
   name: 'ListingInfo',
   props: {
     user: Object,
-    token: Object
+    token: String
   },
   data() {
     return {

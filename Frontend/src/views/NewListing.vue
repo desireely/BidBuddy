@@ -89,7 +89,7 @@ export default {
   name: 'NewListing',
   props: {
     user: Object,
-    token: Object
+    token: String
   },
   data() {
     return {

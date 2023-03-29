@@ -40,7 +40,7 @@ export default {
   name: 'Login',
   props: {
     user: Object,
-    token: Object
+    token: String
   },
   data() {
     return {

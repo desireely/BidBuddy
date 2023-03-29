@@ -13,7 +13,7 @@ export default {
   name: 'MyBids',
   props: {
     user: Object,
-    token: Object
+    token: String
   },
 }
 </script>
