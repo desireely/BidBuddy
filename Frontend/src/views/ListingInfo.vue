@@ -96,7 +96,7 @@ export default {
       }
 
       var sec = a.getSeconds();
-      var formattedDate = date + '/' + a.getMonth() + '/' + year + ' (' + (hour) + "." + min + time + ")";
+      var formattedDate = date + '/' + (a.getMonth() + 1) + '/' + year + ' (' + (hour) + "." + min + time + ")";
       // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min;
       // console.log(time);
       return formattedDate;
