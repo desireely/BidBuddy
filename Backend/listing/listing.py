@@ -334,7 +334,7 @@ def get_listings_according_userid(userid):
                 {
                     "code": 200,
                     "data": {
-                        "listings": listing_dict
+                        "listings": listings
                     }
                 }
             )
