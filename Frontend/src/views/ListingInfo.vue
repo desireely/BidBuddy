@@ -64,7 +64,7 @@ export default {
       if (this.$route.query.listingID) {
         this.listingID = this.$route.query.listingID
         console.log("LISTING ID:", this.listingID)
-        const path = 'http://127.0.0.1:5000/listing/' + this.listingID;
+        const path = `${this.$listing}/${this.listingID}`;
         console.log("PATH:", path)
         axios.get(path)
           .then((res) => {
@@ -121,7 +121,7 @@ export default {
         }
         console.log(bidDetails)
         
-        axios.post('http://127.0.0.1:5015/bidforlisting', { data: bidDetails })
+        axios.post( this.$bidForListing, { data: bidDetails })
           .then((res) => {
             console.log(res.data.data);
           })

@@ -36,8 +36,7 @@ export default {
   },
   methods: {
     getListings() {
-      const path = 'http://127.0.0.1:5000/listing';
-      axios.get(path)
+      axios.get(this.$listing)
         .then((res) => {
           this.listings = res.data.data.listings;
           console.log(res.data.data.listings);

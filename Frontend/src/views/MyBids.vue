@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     getUserBids() {
-      const path = `http://127.0.0.1:5002/showdetailsofbids/${this.user.uid}`;
+      const path = `${this.$showDetailsOfBids}/${this.user.uid}`;
       console.log(path)
 
       axios.get(path)
