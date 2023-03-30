@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     getUserListings() {
-      const path = `http://127.0.0.1:5000/listing/user/${this.user.uid}`;
+      const path = `${this.$listing}/user/${this.user.uid}`;
       console.log(path)
 
       axios.get(path)

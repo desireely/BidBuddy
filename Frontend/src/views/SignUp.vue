@@ -42,9 +42,7 @@ export default {
   methods: {
     registerUser() {
       event.preventDefault();
-      const path = 'http://127.0.0.1:5005/user';
-      axios.post(path,
-        { email: this.email, password: this.password, teleuser: this.teleuser, username: this.username })
+      axios.post(this.$user, { email: this.email, password: this.password, teleuser: this.teleuser, username: this.username })
         .then((res) => {
           console.log(res);
         })
