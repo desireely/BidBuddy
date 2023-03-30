@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     getListings() {
-      axios.get(this.$listing)
+      axios.get(this.$showListing)
         .then((res) => {
           this.listings = res.data.data.listings;
           console.log(res.data.data.listings);

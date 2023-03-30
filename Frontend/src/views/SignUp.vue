@@ -42,7 +42,15 @@ export default {
   methods: {
     registerUser() {
       event.preventDefault();
-      axios.post(this.$user, { email: this.email, password: this.password, teleuser: this.teleuser, username: this.username })
+      const userInfo = {
+        email: this.email,
+        password: this.password,
+        teleuser: this.teleuser,
+        username: this.username
+      }
+      console.log(userInfo)
+      
+      axios.post(this.$user, userInfo)
         .then((res) => {
           console.log(res);
         })

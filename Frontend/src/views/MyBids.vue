@@ -52,6 +52,7 @@ export default {
           console.error(error);
         });
     },
+    
     runSearch() {
       if (this.searchInput) {
         console.log(this.searchInput)
