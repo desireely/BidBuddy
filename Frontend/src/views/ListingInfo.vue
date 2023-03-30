@@ -121,7 +121,7 @@ export default {
         }
         console.log(bidDetails)
         
-        axios.post( this.$bidForListing, { data: bidDetails })
+        axios.post( this.$bidForListing, bidDetails)
           .then((res) => {
             console.log(res.data.data);
           })

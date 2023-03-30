@@ -250,7 +250,7 @@ export default {
         };
         console.log(listing)
 
-        axios.post(this.$listing, { data: listing })
+        axios.post(this.$createListing, listing)
           .then(response => {
             console.log(response.data)
             this.resetInputs();

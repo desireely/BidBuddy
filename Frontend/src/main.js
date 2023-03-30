@@ -12,6 +12,8 @@ app.mount("#app");
 // Global Variables
 app.config.globalProperties.$listing = "http://127.0.0.1:5000/listing";
 app.config.globalProperties.$user = "http://127.0.0.1:5005/user";
+app.config.globalProperties.$showListing = "http://127.0.0.1:5006/showlisting";
+app.config.globalProperties.$createListing = "http://127.0.0.1:5001/createlisting";
 app.config.globalProperties.$showDetailsOfBids = "http://127.0.0.1:5002/showdetailsofbids";
 app.config.globalProperties.$bidForListing = "http://127.0.0.1:5015/bidforlisting";
 
