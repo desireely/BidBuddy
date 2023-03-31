@@ -2,32 +2,30 @@
   <div>
     <h1>Login</h1>
     <div class="w-50 mx-auto">
-      <form>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email address</label>
-          <input type="email" :class="{ 'form-control': true, 'is-invalid': !emailIsValid }" id="email" v-model="email">
-          <div class="invalid-feedback">
-            {{ emailErrMsg }}
-          </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input type="email" :class="{ 'form-control': true, 'is-invalid': !emailIsValid }" id="email" v-model="email">
+        <div class="invalid-feedback">
+          {{ emailErrMsg }}
         </div>
-        <label for="password" class="form-label">Password</label>
-        <div class="input-group mb-3">
-          <input :type="showPassword ? 'text' : 'password'"
-            :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
-          <div class="input-group-append">
-            <button class="input-group-text" type="button" id="togglePassword" @click="showPassword = !showPassword">
-              <i v-bind:class="[showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill']"></i>
-            </button>
-          </div>
-          <div class="invalid-feedback">
-            {{ passwordErrMsg }}
-          </div>
+      </div>
+      <label for="password" class="form-label">Password</label>
+      <div class="input-group mb-3">
+        <input :type="showPassword ? 'text' : 'password'"
+          :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
+        <div class="input-group-append">
+          <button class="input-group-text" type="button" id="togglePassword" @click="showPassword = !showPassword">
+            <i v-bind:class="[showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill']"></i>
+          </button>
         </div>
-        <div class="text-end">
-          <button class="btn btn-outline-dark" @click="login" v-if="email && password">Submit</button>
-          <button class="btn btn-outline-secondary" disabled v-else>Submit</button>
+        <div class="invalid-feedback">
+          {{ passwordErrMsg }}
         </div>
-      </form>
+      </div>
+      <div class="text-end">
+        <button class="btn btn-outline-dark" @click="login" v-if="email && password">Submit</button>
+        <button class="btn btn-outline-secondary" disabled v-else>Submit</button>
+      </div>
     </div>
   </div>
 </template>
@@ -58,7 +56,6 @@ export default {
   },
   methods: {
     login() {
-      event.preventDefault();
       [this.emailIsValid, this.passwordIsValid, this.emailErrMsg, this.passwordErrMsg] = [true, true, null, null];
 
       const self = this;
