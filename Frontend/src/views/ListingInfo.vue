@@ -37,8 +37,11 @@
         </div>
       </div>
 
+      <button @click="checkTransactionInfo" class="btn btn-outline-dark">Scan QR Code</button>
+      <br/>
+      <img :src="`data:image/png;base64,${encoded_string}`" v-if="encoded_string"/>
     </div>
-
+  
     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true"
       ref="successModal">
       <div class="modal-dialog modal-dialog-centered">
@@ -67,14 +70,47 @@ export default {
   },
   data() {
     return {
-      listingId: null,
+      listingID: null,
       listingInfo: [],
       bidPrice: null,
       bidErrMsg: null,
       bidPriceIsValid: true,
+      encoded_string: ""
     };
   },
   methods: {
+    checkTransactionInfo() {
+      console.log("Current User: ", this.user.uid)
+      console.log("Seller: ", this.listingInfo.userid)
+      console.log("Buyer: ", this.listingInfo.highest_current_bidder_userid)
+
+      if (this.user.uid == this.listingInfo.userid) {
+        const transactionInfo = {
+          seller_id: this.user.uid,
+          buyer_id: this.listingInfo.highest_current_bidder_userid,
+          listing_id: this.listingID,
+          confirmed_by: "seller"
+        }
+        this.displayQRCode(transactionInfo);
+      } else if (this.user.uid == this.listingInfo.highest_current_bidder_userid) {
+        const transactionInfo = {
+          buyer_id: this.user.uid,
+          seller_id: this.listingInfo.userid,
+          listing_id: this.listingID,
+          confirmed_by: "buyer"
+        }
+        this.displayQRCode(transactionInfo);
+      }
+    },
+    displayQRCode(transactionInfo) {  
+      axios.post('http://127.0.0.1:5009/qrcode', transactionInfo)
+        .then(response => {
+          this.encoded_string = response.data;
+        })
+        .catch(error => {
+          console.log(error)
+        });
+    },
     getListingInfo() {
       if (this.$route.query.listingID) {
         this.listingID = this.$route.query.listingID

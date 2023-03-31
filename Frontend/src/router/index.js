@@ -8,6 +8,7 @@ import SignUp from "../views/SignUp.vue";
 import Login from "../views/Login.vue";
 import ListingInfo from "../views/ListingInfo.vue";
 import NoResults from "../views/NoResults.vue";
+import ConfirmTransaction from "../views/ConfirmTransaction.vue";
 
 import { auth } from "../../firebaseConfig.js";
 
@@ -62,6 +63,12 @@ const router = createRouter({
       path: "/noresults",
       name: "No Results",
       component: NoResults,
+      beforeEnter: guardMyroute,
+    },
+    {
+      path: "/confirmtransaction",
+      name: "Confirm Transaction",
+      component: ConfirmTransaction,
       beforeEnter: guardMyroute,
     },
   ],
