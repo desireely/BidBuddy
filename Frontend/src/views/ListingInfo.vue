@@ -39,6 +39,21 @@
 
     </div>
 
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true"
+      ref="successModal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="successModalLabel">Bid placed!</h1>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -124,6 +139,10 @@ export default {
         axios.post( this.$bidForListing, bidDetails)
           .then((res) => {
             console.log(res.data.data);
+            this.bidPrice = null;
+            var myModal = new bootstrap.Modal(this.$refs.successModal)
+            var modalToggle = this.$refs.successModal;
+            myModal.show(modalToggle);
           })
           .catch((error) => {
             console.error(error);
