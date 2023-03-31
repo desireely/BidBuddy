@@ -3,11 +3,11 @@
     <h1>New Listing</h1>
     <div class="container">
       <div class="row">
-        <div class="col-4 my-auto">
+        <div class="col-12 col-md-4 my-auto py-3">
           <div class="card">
             <img :src="listingImgURL" class="card-img-top" />
-            <label for="img-upload" class="custom-file-upload">
-              <br /><br /><br />{{ uploadTxt }}
+            <label for="img-upload" class="custom-file-upload d-flex align-items-end pb-5 pb-md-4 pb-xl-5">
+              {{ uploadTxt }}
             </label>
             <input id="img-upload" type="file" accept="image/*" @change="displayImg"
               :class="{ 'form-control': true, 'is-invalid': !listingImageIsValid }" ref="imgInput" />
@@ -16,7 +16,7 @@
             </div>
           </div>
         </div>
-        <div class="col-8">
+        <div class="col-12 col-md-8">
           <div class="mb-3">
             <label for="listing-name" class="form-label">Listing Name</label>
             <input type="text" :class="{ 'form-control': true, 'is-invalid': !listingNameIsValid }" v-model="listingName"
@@ -93,7 +93,7 @@ export default {
   },
   data() {
     return {
-      listingImgURL: 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a',
+      listingImgURL: 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg',
       uploadTxt: "Upload an Image",
       listingImage: null,
       listingImageIsValid: true,
@@ -124,7 +124,7 @@ export default {
       [this.listingImage, this.listingName, this.listingDesc, this.startingBid, this.startDate, this.endDate] = [null, null, null, null, null, null];
       [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.startingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true, true];
       [this.listingNameErrMsg, this.listingDescErrMsg, this.startingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
-      this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a';
+      this.listingImgURL = 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg';
       this.uploadTxt = "Upload an Image";
       this.$refs.imgInput.value = null;
     },
@@ -136,14 +136,14 @@ export default {
           this.uploadTxt = "";
           this.listingImageIsValid = true;
         } else {
-          this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a'
+          this.listingImgURL = 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg'
           this.listingImage = null;
           this.listingImageIsValid = false;
           this.uploadTxt = "Upload an Image";
           this.$refs.imgInput.value = null;
         }
       } else {
-        this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a';
+        this.listingImgURL = 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg';
         this.listingImage = null;
         this.listingImageIsValid = false;
         this.uploadTxt = "Upload an Image";
