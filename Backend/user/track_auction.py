@@ -1,31 +1,29 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, jsonify
 import requests
 from invokes import invoke_http
 import amqp_setup
-import pika
 import json
+import pika
 
 app = Flask(__name__)
 
 
 listing_URL = "http://127.0.0.1:5000/listing"
+bid_URL = "http://127.0.0.1:5020/bid"
 user_URL = "http://127.0.0.1:5005/user"
 
-# Add a new listing
-@app.route("/createlisting", methods=['POST'])
-def add_listing():
-    
+
+# Show all user ongoing listing
+@app.route("/trackauction")
+def get_user_listing():
     if request.is_json:
-
         try:
-            listing = request.get_json()
-            print("Received listing details in JSON order", listing)
-
-            result = processListing(listing)
+            listing_detail = request.get_json()
+            result = processTrackAuction(listing_detail)
             print('\n------------------------')
             print('\nresult: ', result)
             return jsonify(result), result["code"]
-        
+
         except Exception as e:
             
             print(e)
@@ -34,50 +32,62 @@ def add_listing():
                 "code": 500,
                 "message": "listing.py internal error: " + str(e)
             }), 500
-
     # if reached here, not a JSON request.
     return jsonify({
         "code": 400,
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
 
-
-def processListing(listing):
+def processTrackAuction(listing_detail):
 
     # Invoke the listing microservice
+    # Update the status from open to close
+    listing_id = listing_detail['listing_id'] ### ['listing_id'] ###
+    listing_name = listing_detail['listing_name'] ### ['listing_id'] ###
     print('\n-----Invoking listing microservice-----')
-    # listing_result = requests.request(url = listing_URL, method='POST', json=listing)
-    listing_result = invoke_http(listing_URL, method='POST', json=listing)
-    print('listing_result:', listing_result)
+    listing_result = invoke_http(listing_URL+'/'+listing_id, method='PUT', json=listing_detail)
 
     # Check the listing result
     code = listing_result["code"]
     if code not in range(200, 300):
         return listing_result
-    # all the data in listing_result
-    # auction_end_datetime = listing_result['data']['auction_end_datetime']
-    # highest_current_bid = listing_result['data']['highest_current_bid']
-    # listing_description = listing_result['data']['listing_description']
-    listing_name = listing_result['data']['listing_name']
-    # starting_bid = listing_result['data']['starting_bid']
-    # status = listing_result['data']['status']
-    # userid = listing_result['data']['userid']
-    # listing_image_file_name = listing_result['data']['listing_image_file_name']
-    # transaction_end_datetime = listing_result['data']['transaction_end_datetime']
-    # transaction_status = listing_result['data']['transaction_status']
+    
+    # Invoke the bid microservice
+    # Get all bidders details involved in the listing
+    print('\n-----Invoking listing microservice-----')
+    bid_result = invoke_http(bid_URL+'/'+listing_id, method='GET')
 
-    # Invoke the user microservice
-    print('\n-----Invoking user microservice-----')
-    # listing_result = requests.request(url = listing_URL, method='POST', json=listing)
-    userid = listing_result['data']['userid']
-    user_result = invoke_http(user_URL+'/'+userid, method='GET')
-    email = user_result['data']['email']
-    teleid = user_result['data']['teleuser']
+    # Check the bid result
+    code = bid_result["code"]
+    if code not in range(200, 300):
+        return bid_result
+    
+    # Loop through bid result to get all extract their userid to get their contact details
+    emails = []
+    tele = []
+    for bid in bid_result['data']:
+        userid = bid['userid']
+
+        # Invoke the user microservice
+        # Retrieve user email and tele
+        print('\n-----Invoking user microservice-----')
+        user_result = invoke_http(bid_URL+'/'+listing_id, method='PUT')
+
+        # Check the user result
+        code = user_result["code"]
+        if code not in range(200, 300):
+            return user_result
+        
+        emails.append(user_result['data']['email'])
+        emails.append(user_result['data']['teleuser'])
+        
+    # AMQP
+    # Inform all bidders listing ended
 
     # Preparing message to send via AMQP for email
     message_email = json.dumps(
         {
-            "user_emails": [email],
+            "user_emails": [emails],
             "subject": f"{listing_name} Posted Successfully!",
             "html_body": "<strong>Hello, this is a test email.</strong>"
         }
@@ -113,11 +123,7 @@ def processListing(listing):
     #     body=message_tele, 
     #     properties=pika.BasicProperties(delivery_mode=2)
     #     )
-    
 
-    return listing_result
+    return ### ??? ###
 
 
-# Run script
-if __name__ == "__main__":
-    app.run(port=5001, debug=True)

@@ -53,9 +53,12 @@ def create_bid():
     try:
         # if newBid["bid_price"]-highest_price < bid_increment:
         #     raise Exception(f"Minimum bid increment is ${'{:.2f}'.format(bid_increment)}.")
-        
-        doc_ref = db.collection("bid").document()
-        doc_ref.set(newBid)
+        start_price = newBid.pop("start_price", None)
+        if newBid["bid_price"] > start_price:
+            doc_ref = db.collection("bid").document()
+            doc_ref.set(newBid)
+        else:
+            raise Exception(f"Bid price is lower than the start price of ${'{:.2f}'.format(start_price)}.")
     except Exception as e:
         return jsonify(
             {
