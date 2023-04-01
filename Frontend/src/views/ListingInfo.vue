@@ -36,7 +36,21 @@
           <button @click="placeBid" class="btn btn-outline-dark">Place Bid</button>
         </div>
       </div>
+      <div class="row" v-else>
+        <div class="col"></div>
+        <div class="col-2"></div>
 
+        <div class="col-auto">
+          <button @click="displayQRCode" class="btn btn-outline-dark">Confirm Transaction</button>
+        </div>
+      </div>
+    </div>
+
+    <h4>Scan the QR Code to confirm transaction:</h4>
+    <div class="row">
+      <div class="col">
+        <img :src="`data:image/png;base64,${encoded_string}`" v-if="encoded_string"/>
+      </div>
     </div>
 
     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true"
@@ -72,9 +86,30 @@ export default {
       bidPrice: null,
       bidErrMsg: null,
       bidPriceIsValid: true,
+      encoded_string: null,
     };
   },
   methods: {
+    displayQRCode() {  
+      console.log("Current User: ", this.user.uid)
+      console.log("Seller: ", this.listingInfo.userid)
+      console.log("Buyer: ", this.listingInfo.highest_current_bidder_userid)
+
+      if (this.user.uid == this.listingInfo.userid) {
+        const transactionInfo = {
+          seller_id: this.user.uid,
+          buyer_id: this.listingInfo.highest_current_bidder_userid,
+          listing_id: this.listingID,
+        }
+      axios.post(this.$qrCode, transactionInfo)
+        .then(response => {
+          this.encoded_string = response.data;
+        })
+        .catch(error => {
+          console.log(error)
+        });
+      }
+    },
     getListingInfo() {
       if (this.$route.query.listingID) {
         this.listingID = this.$route.query.listingID

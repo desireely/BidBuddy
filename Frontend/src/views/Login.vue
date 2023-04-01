@@ -52,7 +52,19 @@ export default {
 
       emailErrMsg: null,
       passwordErrMsg: null,
+
+      redirect: null,
     };
+  },
+  created() {
+    if (this.$route.query.listingID && this.$route.query.data) {
+      this.redirect = { 
+        path: '/confirmtransaction', 
+        query: { listingID: this.$route.query.listingID, data: this.$route.query.data } 
+      }
+    } else {
+      this.redirect = '/'
+    }
   },
   methods: {
     login() {
@@ -69,7 +81,7 @@ export default {
               user.getIdToken().then(function (token) {
                 // Use the token here
                 console.log(self.user.uid)
-                router.pushReload({ name: 'Home' });
+                router.pushReload(self.redirect);
               }).catch(function (error) {
                 // Handle error here
                 console.log(error.message)

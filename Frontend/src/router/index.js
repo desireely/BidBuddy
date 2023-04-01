@@ -8,6 +8,7 @@ import SignUp from "../views/SignUp.vue";
 import Login from "../views/Login.vue";
 import ListingInfo from "../views/ListingInfo.vue";
 import NoResults from "../views/NoResults.vue";
+import ConfirmTransaction from "../views/ConfirmTransaction.vue";
 
 import { auth } from "../../firebaseConfig.js";
 
@@ -64,6 +65,12 @@ const router = createRouter({
       component: NoResults,
       beforeEnter: guardMyroute,
     },
+    {
+      path: "/confirmtransaction",
+      name: "Confirm Transaction",
+      component: ConfirmTransaction,
+      beforeEnter: handleTransaction,
+    },
   ],
 });
 
@@ -71,6 +78,16 @@ function guardMyroute(to, from, next) {
   auth.onAuthStateChanged(async (user) => {
     if (user === null) {
       next("/login");
+    } else {
+      next();
+    }
+  });
+}
+
+function handleTransaction(to, from, next) {
+  auth.onAuthStateChanged(async (user) => {
+    if (user === null) {
+      next(`/login?listingID=${to.query.listingID}&data=${to.query.data}`);
     } else {
       next();
     }
