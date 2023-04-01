@@ -41,6 +41,7 @@
 import { auth } from "../../firebaseConfig.js"
 import router from "../router";
 import axios from 'axios';
+
 export default {
   name: 'Signup',
   data() {

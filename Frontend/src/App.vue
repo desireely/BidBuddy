@@ -67,7 +67,8 @@
                   Login
                 </router-link>
                 <!-- icon for profile if logged in -->
-                <i class="bi bi-person-circle ms-3 me-4" style="font-size: 30px" v-if="user"></i>
+                <i class="bi bi-person-circle mx-3" style="font-size: 30px" v-if="user"></i>
+                <span class="d-flex align-self-center me-3">{{ username }}</span>
               </div>
             </nav>
           </div>
@@ -86,6 +87,7 @@
 <script>
 import { auth } from "../firebaseConfig.js"
 import router from "./router";
+import axios from 'axios';
 
 export default {
   data() {
@@ -93,6 +95,7 @@ export default {
       user: null,
       token: null,
       searchInput: null,
+      username: null,
     }
   },
   created() {
@@ -103,6 +106,7 @@ export default {
           // Use the token here
           self.token = token;
           self.user = user;
+          self.getUsername();
         }).catch(function (error) {
           // Handle error here
           console.log(error.message)
@@ -111,6 +115,18 @@ export default {
     });
   },
   methods: {
+    getUsername() {
+      axios.get(`${this.$user}/${this.user.uid}`)
+        .then((res) => {
+          console.log(res.data);
+          this.username = res.data.data.username;
+        })
+        .catch((error) => {
+          console.error(error);
+          this.emailIsValid = false;
+          this.emailErrMsg = "Email is already registered."
+        });
+    },
     logout() {
       const self = this;
       auth.signOut()
