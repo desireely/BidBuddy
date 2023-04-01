@@ -19,7 +19,7 @@
       </div>
       
       <br/>
-      <div class="row">
+      <div class="row" v-if="user.uid != listingInfo.userid">
         <div class="col"></div>
 
         <div class="col-2">
