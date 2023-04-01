@@ -46,10 +46,12 @@
       </div>
     </div>
 
-    <h4>Scan the QR Code to confirm transaction:</h4>
-    <div class="row">
-      <div class="col">
-        <img :src="`data:image/png;base64,${encoded_string}`" v-if="encoded_string"/>
+    <div v-if="user.uid == listingInfo.userid && encoded_string">
+      <h4>Scan the QR Code to confirm transaction:</h4>
+      <div class="row">
+        <div class="col">
+          <img :src="`data:image/png;base64,${encoded_string}`"/>
+        </div>
       </div>
     </div>
 
