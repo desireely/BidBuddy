@@ -103,7 +103,7 @@ export default {
         }
       axios.post(this.$qrCode, transactionInfo)
         .then(response => {
-          this.encoded_string = response.data;
+          this.encoded_string = response.data.data;
         })
         .catch(error => {
           console.log(error)
