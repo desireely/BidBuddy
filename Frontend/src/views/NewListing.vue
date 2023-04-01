@@ -68,11 +68,15 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="successModalLabel">Listing created!</h1>
+              <h1 class="modal-title fs-5" id="successModalLabel">{{ listingStatus }}</h1>
             </div>
             <div class="modal-body">
+              {{ listingCreation }}
             </div>
             <div class="modal-footer">
+              <router-link to="/mylistings">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">My Listings</button>
+              </router-link>
               <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
@@ -93,6 +97,9 @@ export default {
   },
   data() {
     return {
+      listingStatus: null,
+      listingCreation: null,
+
       listingImgURL: 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg',
       uploadTxt: "Upload an Image",
       listingImage: null,
@@ -253,13 +260,20 @@ export default {
         axios.post(this.$createListing, listing)
           .then(response => {
             console.log(response.data)
+            this.listingStatus = "Listing created!";
+            this.listingCreation = `You've created a new listing for ${this.listingName}!`
             this.resetInputs();
             var myModal = new bootstrap.Modal(this.$refs.successModal)
             var modalToggle = this.$refs.successModal;
             myModal.show(modalToggle);
           })
           .catch(error => {
-            console.log(error)
+            console.log(error);
+            this.listingStatus = "Listing was not created!";
+            this.listingCreation = "There was an error creating your listing."
+            var myModal = new bootstrap.Modal(this.$refs.successModal)
+            var modalToggle = this.$refs.successModal;
+            myModal.show(modalToggle);
           });
       }
     }
