@@ -22,7 +22,7 @@
       <div class="row" v-if="user.uid != listingInfo.userid">
         <div class="col"></div>
 
-        <div class="col-2">
+        <div class="col-3">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">$</span>
             <input type="text" :class="{ 'form-control': true, 'me-2': true, 'is-invalid': !bidPriceIsValid }" style="width: 10%" id="bid-price" v-model="bidPrice">
@@ -189,6 +189,12 @@ export default {
           })
           .catch((error) => {
             console.error(error);
+            if (error.response.data.message.startsWith("An error occurred while creating the bid. Minimum bid increment")) {
+              this.bidErrMsg = `Minimum bid increment is ${error.response.data.message.match(/\$.*/)[0]}`
+            } else {
+              this.bidErrMsg = "Bid was unsuccessful."
+            }
+            this.bidPriceIsValid = false;
           });
       }
     },
