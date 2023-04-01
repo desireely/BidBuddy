@@ -60,10 +60,10 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="successModalLabel">Bid placed!</h1>
+            <h1 class="modal-title fs-5" id="successModalLabel">{{ bidStatus }}</h1>
           </div>
           <div class="modal-body">
-            You have placed a bid of ${{ msgPrice }} for {{ listingInfo.listing_name }}!
+            {{ bidCreation }}
           </div>
           <div class="modal-footer">
             <router-link to="/mybids">
@@ -87,13 +87,15 @@ export default {
   },
   data() {
     return {
+      bidStatus: null,
+      bidCreation: null,
+
       listingID: null,
       listingInfo: [],
       bidPrice: null,
       bidErrMsg: null,
       bidPriceIsValid: true,
       encoded_string: null,
-      msgPrice: null,
     };
   },
   methods: {
@@ -181,7 +183,9 @@ export default {
         axios.post( this.$bidForListing, bidDetails)
           .then((res) => {
             console.log(res.data.data);
-            this.msgPrice = this.bidPrice;
+            this.bidStatus = "Bid placed!";
+            this.bidCreation = `You have placed a bid of $${this.bidPrice} for ${this.listingInfo.listing_name}!`
+
             this.bidPrice = null;
             var myModal = new bootstrap.Modal(this.$refs.successModal)
             var modalToggle = this.$refs.successModal;
@@ -191,10 +195,15 @@ export default {
             console.error(error);
             if (error.response.data.message.startsWith("An error occurred while creating the bid. Minimum bid increment")) {
               this.bidErrMsg = `Minimum bid increment is ${error.response.data.message.match(/\$.*/)[0]}`
+              this.bidPriceIsValid = false;
             } else {
-              this.bidErrMsg = "Bid was unsuccessful."
+              this.bidStatus = "Bid was not placed!";
+              this.bidCreation = "There was an error placing your bid."
+
+              var myModal = new bootstrap.Modal(this.$refs.successModal)
+              var modalToggle = this.$refs.successModal;
+              myModal.show(modalToggle);
             }
-            this.bidPriceIsValid = false;
           });
       }
     },
