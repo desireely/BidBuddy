@@ -67,7 +67,7 @@ export default {
   },
   data() {
     return {
-      listingId: null,
+      listingID: null,
       listingInfo: [],
       bidPrice: null,
       bidErrMsg: null,
