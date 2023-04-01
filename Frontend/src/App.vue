@@ -68,7 +68,7 @@
                 </router-link>
                 <!-- icon for profile if logged in -->
                 <i class="bi bi-person-circle mx-3" style="font-size: 30px" v-if="user"></i>
-                <span class="d-flex align-self-center me-3">{{ username }}</span>
+                <span class="d-flex align-self-center me-3" v-if="user">{{ username }}</span>
               </div>
             </nav>
           </div>
