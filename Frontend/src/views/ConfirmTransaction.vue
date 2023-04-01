@@ -19,8 +19,6 @@ export default {
   },
   data() {
     return {
-      listingID: null,
-      listingInfo: [],
       transactionMsg: "",
     }
   },
