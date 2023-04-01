@@ -63,8 +63,12 @@
             <h1 class="modal-title fs-5" id="successModalLabel">Bid placed!</h1>
           </div>
           <div class="modal-body">
+            You have placed a bid of ${{ msgPrice }} for {{ listingInfo.listing_name }}!
           </div>
           <div class="modal-footer">
+            <router-link to="/mybids">
+              <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">My Bids</button>
+            </router-link>
             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -89,6 +93,7 @@ export default {
       bidErrMsg: null,
       bidPriceIsValid: true,
       encoded_string: null,
+      msgPrice: null,
     };
   },
   methods: {
@@ -176,6 +181,7 @@ export default {
         axios.post( this.$bidForListing, bidDetails)
           .then((res) => {
             console.log(res.data.data);
+            this.msgPrice = this.bidPrice;
             this.bidPrice = null;
             var myModal = new bootstrap.Modal(this.$refs.successModal)
             var modalToggle = this.$refs.successModal;
