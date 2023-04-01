@@ -36,7 +36,7 @@
           <button @click="placeBid" class="btn btn-outline-dark">Place Bid</button>
         </div>
       </div>
-      <div class="row" v-else>
+      <div class="row" v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
         <div class="col"></div>
         <div class="col-2"></div>
 
@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <div v-if="user.uid == listingInfo.userid && encoded_string">
+    <div v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
       <h4>Scan the QR Code to confirm transaction:</h4>
       <div class="row">
         <div class="col">
