@@ -3,7 +3,7 @@
     <h1>{{ listingInfo.listing_name }}</h1>
     <div class="container p-3">
       <div class="row">
-        <h4>Highest Current Bid: ${{ listingInfo.highest_current_bid }}</h4>
+        <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $" + listingInfo.starting_bid }}</h4>
         <p class="mb-3 fw-medium fs-5">Auction Ends on <span class="fw-medium">{{
           timeConverter(listingInfo.auction_end_datetime) }}</span></p>
       </div>

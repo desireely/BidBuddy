@@ -19,8 +19,8 @@
             timeConverter(listingData.auction_end_datetime)
           }}</p>
           <hr>
-          <p class="card-text m-0">Start Price: ${{ listingData.starting_bid }}</p>
-          <p class="card-text m-0">Current highest bid: ${{ listingData.highest_current_bid }}</p>
+          <p class="card-text m-0">Starting bid: ${{ listingData.starting_bid }}</p>
+          <p class="card-text m-0">Highest bid: {{ listingData.highest_current_bid ? "$" + listingData.highest_current_bid : "None"  }}</p>
         </div>
       </div>
     </router-link>
