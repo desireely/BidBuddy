@@ -42,14 +42,6 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="starting-date" class="form-label">Bidding Start Date</label>
-            <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !startDateIsValid }"
-              v-model="startDate" class="form-control" id="starting-date" @change="validateStartDate()">
-            <div class="invalid-feedback">
-              {{ startDateErrMsg }}
-            </div>
-          </div>
-          <div class="mb-3">
             <label for="ending-date" class="form-label">Bidding End Date</label>
             <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !endDateIsValid }"
               v-model="endDate" id="ending-date" @change="validateEndDate()">
@@ -117,10 +109,6 @@ export default {
       startingBidIsValid: true,
       startingBidErrMsg: null,
 
-      startDate: null,
-      startDateIsValid: true,
-      startDateErrMsg: null,
-
       endDate: null,
       endDateIsValid: true,
       endDateErrMsg: null,
@@ -128,9 +116,9 @@ export default {
   },
   methods: {
     resetInputs() {
-      [this.listingImage, this.listingName, this.listingDesc, this.startingBid, this.startDate, this.endDate] = [null, null, null, null, null, null];
-      [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.startingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true, true];
-      [this.listingNameErrMsg, this.listingDescErrMsg, this.startingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
+      [this.listingImage, this.listingName, this.listingDesc, this.startingBid, this.endDate] = [null, null, null, null, null];
+      [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.startingBidIsValid, this.endDateIsValid] = [true, true, true, true, true];
+      [this.listingNameErrMsg, this.listingDescErrMsg, this.startingBidErrMsg, this.endDateErrMsg] = [null, null, null, null];
       this.listingImgURL = 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg';
       this.uploadTxt = "Upload an Image";
       this.$refs.imgInput.value = null;
@@ -190,40 +178,22 @@ export default {
         this.startingBidIsValid = true;
       }
     },
-    validateStartDate() {
-      if (!this.startDate) {
-        this.startDateErrMsg = "Field is required.";
-        this.startDateIsValid = false;
-      } else if (new Date(this.startDate) < new Date()) {
-        this.startDateErrMsg = "Start date has already passed.";
-        this.startDateIsValid = false;
-      } else {
-        this.startDateErrMsg = null;
-        this.startDateIsValid = true;
-      }
-    },
     validateEndDate() {
       if (!this.endDate) {
         this.endDateErrMsg = "Field is required.";
         this.endDateIsValid = false;
-      } else if (new Date(this.endDate) < new Date()) {
-        this.endDateErrMsg = "End date has already passed.";
+      } else if (new Date(this.endDate) <= new Date()) {
+        this.endDateErrMsg = "End date must be after current date.";
         this.endDateIsValid = false;
-      } else if (this.startDate && this.endDate) {
-        if (new Date(this.endDate) <= new Date(this.startDate)) {
-          this.endDateErrMsg = "End date must be after start date.";
-          this.endDateIsValid = false;
-        } else {
-          this.endDateErrMsg = null;
-          this.endDateIsValid = true;
-        }
+      } else {
+        this.endDateErrMsg = null;
+        this.endDateIsValid = true;
       }
     },
     validate() {
       this.validateName();
       this.validateDesc();
       this.validateBid();
-      this.validateStartDate();
       this.validateEndDate();
 
       if (this.listingImage) {
@@ -232,7 +202,7 @@ export default {
         this.listingImageIsValid = false;
       }
 
-      if (this.listingImageIsValid && this.listingNameIsValid && this.listingDescIsValid && this.startingBidIsValid && this.startDateIsValid && this.endDateIsValid) {
+      if (this.listingImageIsValid && this.listingNameIsValid && this.listingDescIsValid && this.startingBidIsValid && this.endDateIsValid) {
         this.newListing();
       }
     },
@@ -244,7 +214,6 @@ export default {
 
         var listing = {
           userid: this.user.uid,
-          auction_start_datetime: this.startDate,
           auction_end_datetime: this.endDate,
           listing_description: this.listingDesc,
           listing_image: {
