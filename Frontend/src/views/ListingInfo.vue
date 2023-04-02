@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>{{ listingInfo.listing_name }}</h1>
-    <h5 class="px-3" style="color: #C6C6C6">Listed by: {{ sellerName }}</h5>
+    <h5 class="" style="color: #C6C6C6">Listed by: {{ sellerName }}</h5>
     <div class="container p-3">
       <div class="row">
         <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $" +
