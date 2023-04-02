@@ -74,7 +74,7 @@
           </div>
           <!-- Contains the main content of the webpage-->
           <p style="padding: 20px; text-align: justify;">
-            <router-view :user="user" :token="token" :searchInput="searchInput"></router-view>
+            <router-view :user="user" :username="username" :token="token" :searchInput="searchInput"></router-view>
           </p>
 
         </div>
