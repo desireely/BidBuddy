@@ -88,8 +88,11 @@
             {{ bidCreation }}
           </div>
           <div class="modal-footer">
-            <router-link to="/mybids">
+            <router-link to="/mybids" v-if="myBids">
               <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">My Bids</button>
+            </router-link>
+            <router-link to="/mylistings" v-else>
+              <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">My Listings</button>
             </router-link>
             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
           </div>
@@ -124,6 +127,8 @@ export default {
       endDate: null,
       endDateIsValid: true,
       endDateErrMsg: null,
+
+      myBids: true,
     };
   },
   methods: {
@@ -144,6 +149,7 @@ export default {
       axios.post(`${this.$reopenlisting}/${this.$route.query.listingID}`, { auction_end_datetime: this.endDate })
         .then((res) => {
             console.log(res.data);
+            this.myBids = false;
             this.bidStatus = "Listing Reopened!";
             this.bidCreation = `You have reopened ${this.listingInfo.listing_name}!`
 
@@ -247,6 +253,7 @@ export default {
         axios.post(this.$bidForListing, bidDetails)
           .then((res) => {
             console.log(res.data.data);
+            this.myBids = true;
             this.bidStatus = "Bid placed!";
             this.bidCreation = `You have placed a bid of $${this.bidPrice} for ${this.listingInfo.listing_name}!`
 
