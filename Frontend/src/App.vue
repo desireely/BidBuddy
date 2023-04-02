@@ -11,7 +11,7 @@
             <h3 class="d-flex position-relative align-items-center p-1 text-dark text-decoration-none text-center">
               BidBuddy <button type="button" class="btn-close position-absolute" style="right:0;top:0;font-size:0.7em" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </h3>
-            <div class="input-group p-1 mb-2">
+            <div class="input-group p-1 mb-1">
               <span class="input-group-text bg-white border border-end-0" id="search">
                 <i class="bi bi-search"></i>
               </span>
