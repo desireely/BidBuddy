@@ -193,16 +193,23 @@ def add_listing():
     data = request.get_json()
     # !!!
     # add upload image to firebase storage, get filename and put in "listing_image_file_name" here after UI set up
-    image_data = base64.b64decode(data["listing_image"]["image"])
-    print(type(image_data))
-    print(len(image_data))
-    bucket = storage.bucket("esd-project-listing.appspot.com")
-    print(f"bucket: {bucket}")
-    blob = bucket.blob(data["listing_image"]["name"])
-    print(f"blob: {blob}")
-    blob.upload_from_string(image_data)
-    image_url = blob.public_url
-    print(f"image_url: {image_url}")
+    if ("listing_image_url" not in data):
+        image_data = base64.b64decode(data["listing_image"]["image"])
+        print(type(image_data))
+        print(len(image_data))
+        bucket = storage.bucket("esd-project-listing.appspot.com")
+        print(f"bucket: {bucket}")
+        blob = bucket.blob(data["listing_image"]["name"])
+        print(f"blob: {blob}")
+        blob.upload_from_string(image_data, content_type='image/jpeg')
+        metadata = {"firebaseStorageDownloadTokens": uuid.uuid4()}
+        blob.metadata = metadata
+        blob.patch()
+        blob.make_public()
+        image_url = blob.public_url
+        print(f"image_url: {image_url}")
+    else:
+        image_url = data["listing_image_url"]
 
     try:
         listing = {
@@ -265,6 +272,8 @@ def update_listing(listingid):
             listing_doc_ref.update({u'listing_image_file_name': data["listing_image_file_name"]})
         if "transaction_status" in data:
             listing_doc_ref.update({u'transaction_status': data["transaction_status"]})
+        if "can_reopen" in data:
+            listing_doc_ref.update({u'can_reopen': data["can_reopen"]})
 
         listing_updated = listing_doc_ref.get()
         listing_dict = listing_updated.to_dict()

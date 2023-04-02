@@ -10,7 +10,9 @@ app = Flask(__name__)
 CORS(app)
 
 listing_URL = "http://listing:5007/listing"
+# listing_URL = "http://127.0.0.1:5007/listing"
 user_URL = "http://user:5005/user"
+# user_URL = "http://127.0.0.1:5005/user"
 
 # Add a new listing
 @app.route("/createlisting", methods=['POST'])
@@ -99,13 +101,13 @@ def processListing(listing):
 
 
     # AMQP part
-    print('\n\n-----Publishing message-----')        
-    amqp_setup.channel.basic_publish(
-        exchange=amqp_setup.exchangename, 
-        routing_key="send.email", 
-        body=message_email, 
-        properties=pika.BasicProperties(delivery_mode=2)
-        )
+    # print('\n\n-----Publishing message-----')        
+    # amqp_setup.channel.basic_publish(
+    #     exchange=amqp_setup.exchangename, 
+    #     routing_key="send.email", 
+    #     body=message_email, 
+    #     properties=pika.BasicProperties(delivery_mode=2)
+    #     )
     
     # print('\n\n-----Publishing tele-----')        
     # amqp_setup.channel.basic_publish(

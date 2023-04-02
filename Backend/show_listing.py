@@ -10,7 +10,9 @@ app = Flask(__name__)
 CORS(app)
 
 listing_URL = "http://listing:5007/listing"
+# listing_URL = "http://127.0.0.1:5007/listing"
 user_URL = "http://user:5005/user"
+# user_URL = "http://127.0.0.1:5005/user"
 
 
 # Show all ongoing listing

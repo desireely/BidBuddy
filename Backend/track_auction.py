@@ -4,20 +4,28 @@ from invokes import invoke_http
 import amqp_setup
 import json
 import pika
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 bid_URL = "http://bid:5020/bid"
+# bid_URL = "http://127.0.0.1:5020/bid"
 user_URL = "http://user:5005/user"
+# user_URL = "http://127.0.0.1:5005/user"
 
 
 # Show all user ongoing listing
 @app.route("/trackauction", methods=['POST'])
 def get_user_listing():
+    print("trackauction invoked!")
     if request.is_json:
         try:
+            print("Request is: ", request)
             listing_detail = request.get_json()
-            result = processTrackAuction(listing_detail)
+            print("Listing detail is: ", listing_detail)
+            listing_id = listing_detail['listing_id'].split("/")[1]
+            result = processTrackAuction(listing_id)
             print('\n------------------------')
             print('\nresult: ', result)
             return jsonify(result), result["code"]
@@ -36,9 +44,9 @@ def get_user_listing():
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
 
-def processTrackAuction(listing_detail):
+def processTrackAuction(listing_id):
     
-    listing_id = listing_detail['listing_id']
+    # listing_id = listing_detail['listing_id']
     # listing_name = listing_detail['listing_name']
     # Invoke the bid microservice
     # Get all bidders details involved in the listing
@@ -70,8 +78,9 @@ def processTrackAuction(listing_detail):
         emails.append(user_result['data']['email'])
         emails.append(user_result['data']['teleuser'])
 
-
-        
+    print("Emails: ", list(set(emails)))
+    print("Tele: ", list(set(tele)))
+    
     # # AMQP
     # # Inform all bidders listing ended
 

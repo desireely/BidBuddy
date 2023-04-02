@@ -16,9 +16,25 @@ app = Flask(__name__)
 CORS(app)
 
 listing_URL = "http://listing:5007/listing"
+# listing_URL = "http://127.0.0.1:5007/listing"
 user_URL = "http://user:5005/user"
+# user_URL = "http://127.0.0.1:5005/user"
 
 KEY_FILE = "key.txt"
+
+@app.route("/tracktransaction", methods=['POST'])
+def tracktransaction():
+
+    print("Track transaction invoked!")
+    if request.is_json:
+        try:
+            print("Request is: ", request)
+            listing_detail = request.get_json()
+            print("Listing detail is: ", listing_detail)
+        except Exception as e:
+            print(e)
+
+    return "Track transaction here!"
 
 # Load the key from the file, or generate a new one if the file doesn't exist
 def retrieveKey():
@@ -178,13 +194,13 @@ def process_transaction(data):
 
 
     # AMQP part
-    print('\n\n-----Publishing message-----')        
-    amqp_setup.channel.basic_publish(
-        exchange=amqp_setup.exchangename, 
-        routing_key="send.email", 
-        body=message_email, 
-        properties=pika.BasicProperties(delivery_mode=2)
-        )
+    # print('\n\n-----Publishing message-----')        
+    # amqp_setup.channel.basic_publish(
+    #     exchange=amqp_setup.exchangename, 
+    #     routing_key="send.email", 
+    #     body=message_email, 
+    #     properties=pika.BasicProperties(delivery_mode=2)
+    #     )
     
     # print('\n\n-----Publishing tele-----')        
     # amqp_setup.channel.basic_publish(

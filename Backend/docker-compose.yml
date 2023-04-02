@@ -232,6 +232,48 @@ services:
     ports:
       - "5008:5008"
 
+  #################################################
+  # CheckListing: The CheckListing microservice
+  #################################################
+  checklisting:
+    build: 
+      context: ./
+      dockerfile: checklisting.Dockerfile
+    image: bidbud/checklisting:esd
+    restart: always
+    depends_on:
+      - user
+      - listing
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5011:5011"
+
+  #################################################
+  # ReopenListing: The ReopenListing microservice
+  #################################################
+  reopenlisting:
+    build: 
+      context: ./
+      dockerfile: reopenlisting.Dockerfile
+    image: bidbud/reopenlisting:esd
+    restart: always
+    depends_on:
+      - user
+      - bid
+      - listing
+      - createlisting
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5010:5010"
+
   # #######################################
   # # Postgres: The database used by Kong
   # #######################################
