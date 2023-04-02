@@ -11,7 +11,7 @@
       </div>
       <div class="row mt-2">
         <div class="col-5">
-          Image here
+          <img :src="listingInfo.listing_image_url" style='height: 100%; width: 100%; object-fit: contain'>
         </div>
         <div class="col-7 border border-dark-subtle rounded p-3">
           <h5>Product Description</h5>

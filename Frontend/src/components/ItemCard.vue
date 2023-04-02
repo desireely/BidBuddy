@@ -4,7 +4,7 @@
       :to="{ path: '/listinginfo', query: { listingID: listingData.listingid, username: (listingData.username ? listingData.username : currentUser) } }"
       style="text-decoration: none; color: inherit;">
       <div class="card mb-2 mycard">
-        <img src="" class="card-img-top">
+        <img :src="listingData.listing_image_url" class="card-img-top">
         <div class="card-body">
           <div class="row align-items-center">
             <div class="col-7">
