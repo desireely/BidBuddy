@@ -67,8 +67,7 @@
       </div>
     </div>
 
-    <div
-      v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
+    <div v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
       <h4>Scan the QR Code to confirm transaction:</h4>
       <div class="row">
         <div class="col">
@@ -104,6 +103,8 @@
 
 <script>
 import axios from 'axios';
+import { db } from "../../firebaseConfig.js"
+
 export default {
   name: 'ListingInfo',
   props: {
@@ -183,6 +184,24 @@ export default {
         axios.post(this.$qrCode, transactionInfo)
           .then(response => {
             this.encoded_string = response.data.data;
+
+            const docRef = db.collection('listings').doc(this.$route.query.listingID);
+            docRef.onSnapshot((doc) => {
+              if (doc.exists && doc.data().transaction_status == "closed") {
+                this.listingInfo.transaction_status = "closed";
+
+                this.myBids = false;
+                this.bidStatus = "Transaction Confirmed!";
+                this.bidCreation = `You have confirmed the transaction for ${this.listingInfo.listing_name}!`
+
+                var myModal = new bootstrap.Modal(this.$refs.successModal)
+                var modalToggle = this.$refs.successModal;
+                myModal.show(modalToggle);
+              }
+            }, (error) => {
+              console.error('Error fetching document:', error);
+            });
+
           })
           .catch(error => {
             console.log(error)
