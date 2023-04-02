@@ -8,40 +8,42 @@
     <div class="container-fluid h-100 d-flex flex-column">
       <!-- h-100 takes the full height of the container-->
       <div class="row h-100">
-        <div class="col-2 border-end min-vh-100 p-3" v-if="user">
-          <h3 class="d-flex align-items-center p-1 text-dark text-decoration-none text-center">
-            BidBuddy</h3>
-          <!-- Navigation links in sidebar-->
-          <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-              <router-link to="/" class="nav-link text-dark" active-class="bg-dark text-white">
-                <i class="bi bi-house me-2" width="16" height="16"></i>
-                Home
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/mylistings" class="nav-link text-dark" active-class="bg-dark text-white">
-                <i class="bi bi-bag me-2" width="16" height="16"></i>
-                My Listings
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/mybids" class="nav-link text-dark" active-class="bg-dark text-white">
-                <i class="bi bi-coin me-2" width="16" height="16"></i>
-                My Bids
-              </router-link>
-            </li>
-            <li>
-              <button class="nav-link text-dark" active-class="bg-dark text-white" @click="logout">
-                <i class="bi bi-box-arrow-right me-2" width="16" height="16"></i>
-                Log Out
-              </button>
-            </li>
-          </ul>
+        <div class="col-2 border-end min-vh-100 px-3" v-if="user">
+          <div class="sticky-top py-3">
+            <h3 class="d-flex align-items-center p-1 text-dark text-decoration-none text-center">
+              BidBuddy</h3>
+            <!-- Navigation links in sidebar-->
+            <ul class="nav nav-pills flex-column mb-auto">
+              <li class="nav-item">
+                <router-link to="/" class="nav-link text-dark" active-class="bg-dark text-white">
+                  <i class="bi bi-house me-2" width="16" height="16"></i>
+                  Home
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/mylistings" class="nav-link text-dark" active-class="bg-dark text-white">
+                  <i class="bi bi-bag me-2" width="16" height="16"></i>
+                  My Listings
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/mybids" class="nav-link text-dark" active-class="bg-dark text-white">
+                  <i class="bi bi-coin me-2" width="16" height="16"></i>
+                  My Bids
+                </router-link>
+              </li>
+              <li>
+                <button class="nav-link text-dark" active-class="bg-dark text-white" @click="logout">
+                  <i class="bi bi-box-arrow-right me-2" width="16" height="16"></i>
+                  Log Out
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
         <div :class="{ 'col-10': user, 'p-0': true }">
           <!-- Top navbar -->
-          <div class="container-fluid p-0 border-bottom">
+          <div class="container-fluid p-0 border-bottom sticky-top bg-white">
             <nav class="navbar navbar-expand-lg">
               <div v-if="!user" class="col-3">
                 <h3 class="d-flex align-items-center p-1 text-dark text-decoration-none text-center ms-3">
