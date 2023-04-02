@@ -1,0 +1,315 @@
+version: "3"
+
+# volumes:
+  # pgdata: 
+  # kongadata:
+
+# networks:
+#   kong-net:
+#     driver: bridge
+
+services:
+  #################################
+  # Bid: The Bid microservice
+  #################################
+  bid:
+    build: 
+      context: ./
+      dockerfile: bid.Dockerfile
+    image: bidbud/bid:esd
+    # container_name: bid
+    # networks:
+    #   - kong-net
+    restart: always
+    environment:
+      # Replace this with your Firebase configuration
+      FIREBASE_API_KEY: AIzaSyD24Sfv8QG_YD1aaGMCOF-DlnGv6VWjnek
+      FIREBASE_AUTH_DOMAIN: esd-project-listing.firebaseapp.com
+      FIREBASE_DATABASE_URL: https://console.firebase.google.com/project/esd-project-listing/firestore/data/
+      FIREBASE_PROJECT_ID: esd-project-listing
+      FIREBASE_APP_ID: 1:877925820233:web:0c468f7d123ccc39145c98
+      PYTHONUNBUFFERED: 1
+    
+    ports:
+      - "5020:5020"
+
+  #################################
+  # User: The User microservice
+  #################################
+  user:
+    build: 
+      context: ./
+      dockerfile: user.Dockerfile
+    image: bidbud/user:esd
+    restart: always
+    environment:
+      # Replace this with your Firebase configuration
+      FIREBASE_API_KEY: AIzaSyD24Sfv8QG_YD1aaGMCOF-DlnGv6VWjnek
+      FIREBASE_AUTH_DOMAIN: esd-project-listing.firebaseapp.com
+      FIREBASE_DATABASE_URL: https://console.firebase.google.com/project/esd-project-listing/firestore/data/
+      FIREBASE_PROJECT_ID: esd-project-listing
+      FIREBASE_APP_ID: 1:877925820233:web:0c468f7d123ccc39145c98
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5005:5005"
+
+  ####################################
+  # Listing: The Listing microservice
+  ####################################
+  listing:
+    build: 
+      context: ./
+      dockerfile: listing.Dockerfile
+    image: bidbud/listing:esd
+    restart: always
+    environment:
+      # Replace this with your Firebase configuration
+      FIREBASE_API_KEY: AIzaSyD24Sfv8QG_YD1aaGMCOF-DlnGv6VWjnek
+      FIREBASE_AUTH_DOMAIN: esd-project-listing.firebaseapp.com
+      FIREBASE_DATABASE_URL: https://console.firebase.google.com/project/esd-project-listing/firestore/data/
+      FIREBASE_PROJECT_ID: esd-project-listing
+      FIREBASE_APP_ID: 1:877925820233:web:0c468f7d123ccc39145c98
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5007:5007"
+
+  ####################################
+  # QR Code: The QR Code microservice
+  ####################################
+  qrcode:
+    build: 
+      context: ./
+      dockerfile: qrcode.Dockerfile
+    image: bidbud/qrcode:esd
+    restart: always
+    environment:
+      # Replace this with your Firebase configuration
+      FIREBASE_API_KEY: AIzaSyD24Sfv8QG_YD1aaGMCOF-DlnGv6VWjnek
+      FIREBASE_AUTH_DOMAIN: esd-project-listing.firebaseapp.com
+      FIREBASE_DATABASE_URL: https://console.firebase.google.com/project/esd-project-listing/firestore/data/
+      FIREBASE_PROJECT_ID: esd-project-listing
+      FIREBASE_APP_ID: 1:877925820233:web:0c468f7d123ccc39145c98
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5009:5009"
+
+  #################################################
+  # RabbitMQ: The RabbitMQ microservice
+  #################################################
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: esd-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  # amqp_setup:
+  #   build: 
+  #     context: ./
+  #     dockerfile: amqp.Dockerfile
+  #   environment:
+  #     RABBITMQ_HOST: rabbitmq
+  #     RABBITMQ_PORT: 5672
+  #     PYTHONUNBUFFERED: 1
+  #   depends_on:
+  #     - rabbitmq
+
+  #################################################
+  # CreateListing: The CreateListing microservice
+  #################################################
+  createlisting:
+    build: 
+      context: ./
+      dockerfile: createlisting.Dockerfile
+    image: bidbud/createlisting:esd
+    restart: always
+    depends_on:
+      - user
+      - listing
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5001:5001"
+
+  #################################################
+  # BidForListing: The BidForListing microservice
+  #################################################
+  bidforlisting:
+    build: 
+      context: ./
+      dockerfile: bidforlisting.Dockerfile
+    image: bidbud/bidforlisting:esd
+    restart: always
+    depends_on:
+      - rabbitmq
+      - user
+      - listing
+      - bid
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5015:5015"
+
+  #################################################
+  # ShowListing: The ShowListing microservice
+  #################################################
+  showlisting:
+    build: 
+      context: ./
+      dockerfile: showlisting.Dockerfile
+    image: bidbud/showlisting:esd
+    restart: always
+    depends_on:
+      - user
+      - listing
+    environment:
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5006:5006"
+
+  #################################################
+  # ShowDetailsOfBids: The ShowDetailsOfBids microservice
+  #################################################
+  showdetailsofbids:
+    build: 
+      context: ./
+      dockerfile: showdetailsofbids.Dockerfile
+    image: bidbud/showdetailsofbids:esd
+    restart: always
+    depends_on:
+      - user
+      - listing
+      - bid
+    environment:
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5002:5002"
+
+  #################################################
+  # TrackAuction: The STrackAuction microservice
+  #################################################
+  trackauction:
+    build: 
+      context: ./
+      dockerfile: trackauction.Dockerfile
+    image: bidbud/trackauction:esd
+    restart: always
+    depends_on:
+      - user
+      - bid
+    environment:
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5017:5017"
+
+  #################################################
+  # TrackTransaction: The TrackTransaction microservice
+  #################################################
+  tracktransaction:
+    build: 
+      context: ./
+      dockerfile: tracktransaction.Dockerfile
+    image: bidbud/tracktransaction:esd
+    restart: always
+    depends_on:
+      - user
+      - listing
+      - rabbitmq
+      - qrcode
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5008:5008"
+
+  # #######################################
+  # # Postgres: The database used by Kong
+  # #######################################
+  # kong-database:
+  #   image: postgres:9.6
+  #   restart: always
+  #   networks:
+  #     - kong-net
+  #   environment:
+  #     POSTGRES_DB: kong
+  #     POSTGRES_USER: kong
+  #     POSTGRES_PASSWORD: password
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD", "pg_isready", "-U", "kong"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+
+  # #######################################
+  # # Kong database migration
+  # #######################################
+  # kong-migration:
+  #   image: kong:2.0.4
+  #   command: "kong migrations bootstrap"
+  #   restart: on-failure
+  #   networks:
+  #     - kong-net
+  #   environment:
+  #     KONG_DATABASE: postgres
+  #     KONG_PG_HOST: kong-database
+  #     KONG_PG_USER: kong
+  #     KONG_PG_PASSWORD: password
+  #   depends_on:
+  #     - kong-database
+
+  # #######################################
+  # # Kong: The API Gateway
+  # #######################################
+  # kong:
+  #   image: kong:2.0.4
+  #   restart: always
+  #   networks:
+  #     - kong-net
+  #   environment:
+  #     KONG_DATABASE: postgres
+  #     KONG_PG_HOST: kong-database
+  #     KONG_PG_USER: kong
+  #     KONG_PG_PASSWORD: password
+  #     KONG_PROXY_LISTEN: 0.0.0.0:8000
+  #     KONG_ADMIN_LISTEN: 0.0.0.0:8001
+  #   depends_on:
+  #     - kong-migration
+  #   ports:
+  #     - "8000:8000"
+  
+  # #######################################
+  # # Konga: Kong GUI
+  # #######################################
+  # konga:
+  #   image: pantsel/konga
+  #   restart: always
+  #   networks:
+  #       - kong-net
+  #   environment:
+  #     DB_ADAPTER: postgres
+  #     DB_HOST: kong-database
+  #     DB_USER: kong
+  #     DB_PASSWORD: password
+  #     DB_DATABASE: konga_db
+  #   depends_on:
+  #     - kong
+  #   ports:
+  #     - "1337:1337"
+  #   volumes:
+  #     - kongadata:/app/kongadata
+
+
