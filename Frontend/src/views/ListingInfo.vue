@@ -39,12 +39,30 @@
           <button @click="placeBid" class="btn btn-outline-dark">Place Bid</button>
         </div>
       </div>
-      <div class="row" v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
+      <div class="row" v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo)">
         <div class="col"></div>
         <div class="col-2"></div>
 
         <div class="col-auto">
           <button @click="displayQRCode" class="btn btn-outline-dark">Confirm Transaction</button>
+        </div>
+      </div>
+      <div class="row" v-else-if="listingInfo.status == 'closed' && listingInfo.can_reopen">
+        <div class="col"></div>
+
+        <div class="col-5">
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">New Bidding End Date</span>
+            <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !endDateIsValid }"
+              v-model="endDate" id="ending-date">
+            <div class="invalid-feedback">
+              {{ endDateErrMsg }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-auto">
+          <button @click="validateEndDate()" class="btn btn-outline-dark">Reopen Listing</button>
         </div>
       </div>
     </div>
@@ -102,9 +120,49 @@ export default {
       bidErrMsg: null,
       bidPriceIsValid: true,
       encoded_string: null,
+
+      endDate: null,
+      endDateIsValid: true,
+      endDateErrMsg: null,
     };
   },
   methods: {
+    validateEndDate() {
+      if (!this.endDate) {
+        this.endDateErrMsg = "Field is required.";
+        this.endDateIsValid = false;
+      } else if (new Date(this.endDate) <= new Date()) {
+        this.endDateErrMsg = "End date must be after current date.";
+        this.endDateIsValid = false;
+      } else {
+        this.endDateErrMsg = null;
+        this.endDateIsValid = true;
+        this.reopen();
+      }
+    },
+    reopen() {
+      axios.post(this.$reopenlisting, { auction_end_datetime: this.endDate })
+        .then((res) => {
+            console.log(res.data);
+            this.bidStatus = "Listing Reopened!";
+            this.bidCreation = `You have reopened ${this.listingInfo.listing_name}!`
+
+            this.endDate = null;
+            this.endDateErrMsg = null;
+            var myModal = new bootstrap.Modal(this.$refs.successModal)
+            var modalToggle = this.$refs.successModal;
+            myModal.show(modalToggle);
+          })
+          .catch((error) => {
+            console.error(error);
+            this.bidStatus = "Listing was not reopened!";
+            this.bidCreation = "There was an error reopening your listing."
+
+            var myModal = new bootstrap.Modal(this.$refs.successModal)
+            var modalToggle = this.$refs.successModal;
+            myModal.show(modalToggle);
+          });
+    },
     displayQRCode() {
       console.log("Current User: ", this.user.uid)
       console.log("Seller: ", this.listingInfo.userid)

@@ -18,6 +18,7 @@ app.config.globalProperties.$createListing = "http://127.0.0.1:5001/createlistin
 app.config.globalProperties.$showDetailsOfBids = "http://127.0.0.1:5002/showdetailsofbids";
 app.config.globalProperties.$bidForListing = "http://127.0.0.1:5015/bidforlisting";
 app.config.globalProperties.$confirmTransaction = "http://127.0.0.1:5008/confirmtransaction";
+app.config.globalProperties.$reopenlisting = "http://127.0.0.1:5010/reopenlisting";
 
 // let app;
 // auth.onAuthStateChanged(() => {
