@@ -1,6 +1,8 @@
 <template>
   <div class="col-12 col-sm-6 col-md-4 p-2">
-    <router-link :to="{ path: '/listinginfo', query: { listingID: listingData.listingid, username: (listingData.username ? listingData.username : currentUser) } }" style="text-decoration: none; color: inherit;">
+    <router-link
+      :to="{ path: '/listinginfo', query: { listingID: listingData.listingid, username: (listingData.username ? listingData.username : currentUser) } }"
+      style="text-decoration: none; color: inherit;">
       <div class="card mb-2 mycard">
         <img src="" class="card-img-top">
         <div class="card-body">
@@ -11,17 +13,20 @@
               </div>
             </div>
             <div class="col-5 text-end" v-if="!mylistings">
-              <router-link :to="{ path: '/listinginfo', query: { listingID: listingData.listingid, username: (listingData.username ? listingData.username : currentUser) } }"
+              <router-link
+                :to="{ path: '/listinginfo', query: { listingID: listingData.listingid, username: (listingData.username ? listingData.username : currentUser) } }"
                 class="btn btn-outline-dark py-1 px-2">Place Bid</router-link>
             </div>
           </div>
           <p class="card-text text-start text-wrap">
-            <span style="color: #C6C6C6">By {{ listingData.username ? listingData.username : currentUser }}<br/></span>
+            <span style="color: #C6C6C6">Listed by: {{ listingData.username ? listingData.username : currentUser
+            }}<br /></span>
             Auction ends on <br> {{ timeConverter(listingData.auction_end_datetime) }}
           </p>
           <hr>
           <p class="card-text m-0">Starting bid: ${{ listingData.starting_bid }}</p>
-          <p class="card-text m-0">Highest bid: {{ listingData.highest_current_bid ? "$" + listingData.highest_current_bid : "None"  }}</p>
+          <p class="card-text m-0">Highest bid: {{ listingData.highest_current_bid ? "$" + listingData.highest_current_bid
+            : "None" }}</p>
         </div>
       </div>
     </router-link>
@@ -72,10 +77,10 @@ export default {
 </script>
 
 <style>
-  .mycard:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    transform: translateY(-5px);
-    transition: all 0.2s linear;
-    cursor: pointer;
-  }
+.mycard:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  transition: all 0.2s linear;
+  cursor: pointer;
+}
 </style>

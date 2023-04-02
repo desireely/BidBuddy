@@ -1,10 +1,11 @@
 <template>
   <div>
     <h1>{{ listingInfo.listing_name }}</h1>
-    <h5 class="px-3" style="color: #C6C6C6">By {{ sellerName }}</h5>
+    <h5 class="px-3" style="color: #C6C6C6">Listed by: {{ sellerName }}</h5>
     <div class="container p-3">
       <div class="row">
-        <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $" + listingInfo.starting_bid }}</h4>
+        <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $" +
+          listingInfo.starting_bid }}</h4>
         <p class="mb-3 fw-medium fs-5">Auction Ends on <span class="fw-medium">{{
           timeConverter(listingInfo.auction_end_datetime) }}</span></p>
       </div>
@@ -18,15 +19,16 @@
           {{ listingInfo.listing_description }}
         </div>
       </div>
-      
-      <br/>
+
+      <br />
       <div class="row" v-if="user.uid != listingInfo.userid">
         <div class="col"></div>
 
         <div class="col-3">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">$</span>
-            <input type="text" :class="{ 'form-control': true, 'me-2': true, 'is-invalid': !bidPriceIsValid }" style="width: 10%" id="bid-price" v-model="bidPrice">
+            <input type="text" :class="{ 'form-control': true, 'me-2': true, 'is-invalid': !bidPriceIsValid }"
+              style="width: 10%" id="bid-price" v-model="bidPrice">
             <div class="invalid-feedback text-nowrap">
               {{ bidErrMsg }}
             </div>
@@ -47,11 +49,12 @@
       </div>
     </div>
 
-    <div v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
+    <div
+      v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
       <h4>Scan the QR Code to confirm transaction:</h4>
       <div class="row">
         <div class="col">
-          <img :src="`data:image/png;base64,${encoded_string}`"/>
+          <img :src="`data:image/png;base64,${encoded_string}`" />
         </div>
       </div>
     </div>
@@ -102,7 +105,7 @@ export default {
     };
   },
   methods: {
-    displayQRCode() {  
+    displayQRCode() {
       console.log("Current User: ", this.user.uid)
       console.log("Seller: ", this.listingInfo.userid)
       console.log("Buyer: ", this.listingInfo.highest_current_bidder_userid)
@@ -113,13 +116,13 @@ export default {
           buyer_id: this.listingInfo.highest_current_bidder_userid,
           listing_id: this.listingID,
         }
-      axios.post(this.$qrCode, transactionInfo)
-        .then(response => {
-          this.encoded_string = response.data.data;
-        })
-        .catch(error => {
-          console.log(error)
-        });
+        axios.post(this.$qrCode, transactionInfo)
+          .then(response => {
+            this.encoded_string = response.data.data;
+          })
+          .catch(error => {
+            console.log(error)
+          });
       }
     },
     getListingInfo() {
@@ -182,8 +185,8 @@ export default {
           bid_price: Number(this.bidPrice),
         }
         console.log(bidDetails)
-        
-        axios.post( this.$bidForListing, bidDetails)
+
+        axios.post(this.$bidForListing, bidDetails)
           .then((res) => {
             console.log(res.data.data);
             this.bidStatus = "Bid placed!";
