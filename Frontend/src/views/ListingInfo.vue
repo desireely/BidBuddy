@@ -141,7 +141,7 @@ export default {
       }
     },
     reopen() {
-      axios.post(this.$reopenlisting, { auction_end_datetime: this.endDate })
+      axios.post(`${this.$reopenlisting}/${this.$route.query.listingID}`, { auction_end_datetime: this.endDate })
         .then((res) => {
             console.log(res.data);
             this.bidStatus = "Listing Reopened!";
