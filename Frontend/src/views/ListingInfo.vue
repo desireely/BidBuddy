@@ -272,6 +272,9 @@ export default {
             this.bidStatus = "Bid placed!";
             this.bidCreation = `You have placed a bid of $${this.bidPrice} for ${this.listingInfo.listing_name}!`
 
+            this.listingInfo.highest_current_bid = this.bidPrice;
+            this.listingInfo.highest_current_bidder_userid = this.user.uid;
+
             this.bidPrice = null;
             var myModal = new bootstrap.Modal(this.$refs.successModal)
             var modalToggle = this.$refs.successModal;
