@@ -83,7 +83,7 @@ const router = createRouter({
 function guardMyroute(to, from, next) {
   auth.onAuthStateChanged(async (user) => {
     if (user === null) {
-      next("/login");
+      next("/landing");
     } else {
       next();
     }

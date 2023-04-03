@@ -185,7 +185,7 @@ export default {
           console.log("Logged Out")
           self.token = null;
           self.user = null;
-          router.pushReload({ name: 'Login' });
+          router.pushReload({ name: 'Landing' });
         })
         .catch(function (error) {
           console.log(error.message)
