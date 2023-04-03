@@ -1,30 +1,32 @@
 <template>
-  <div class>
-    <h1 class>Login</h1>
-    <div class="w-50 mx-auto">
-      <div class="mb-3">
-        <label for="email" class="form-label">Email address</label>
-        <input type="email" :class="{ 'form-control': true, 'is-invalid': !emailIsValid }" id="email" v-model="email">
-        <div class="invalid-feedback">
-          {{ emailErrMsg }}
+  <div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 200px); overflow: hidden;">
+    <div class="card w-50 mx-auto p-3">
+      <div class="card-body">
+        <h1 class="card-title text-center">Login</h1>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" :class="{ 'form-control': true, 'is-invalid': !emailIsValid }" id="email" v-model="email">
+          <div class="invalid-feedback">
+            {{ emailErrMsg }}
+          </div>
         </div>
-      </div>
-      <label for="password" class="form-label">Password</label>
-      <div class="input-group mb-3">
-        <input :type="showPassword ? 'text' : 'password'"
-          :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
-        <div class="input-group-append">
-          <button class="input-group-text" type="button" id="togglePassword" @click="showPassword = !showPassword">
-            <i v-bind:class="[showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill']"></i>
-          </button>
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group mb-3">
+          <input :type="showPassword ? 'text' : 'password'"
+            :class="{ 'form-control': true, 'is-invalid': !passwordIsValid }" id="password" v-model="password">
+          <div class="input-group-append">
+            <button class="input-group-text" type="button" id="togglePassword" @click="showPassword = !showPassword">
+              <i v-bind:class="[showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill']"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback">
+            {{ passwordErrMsg }}
+          </div>
         </div>
-        <div class="invalid-feedback">
-          {{ passwordErrMsg }}
+        <div class="text-end">
+          <button class="btn btn-outline-dark" @click="login" v-if="email && password">Submit</button>
+          <button class="btn btn-outline-secondary" disabled v-else>Submit</button>
         </div>
-      </div>
-      <div class="text-end">
-        <button class="btn btn-outline-dark" @click="login" v-if="email && password">Submit</button>
-        <button class="btn btn-outline-secondary" disabled v-else>Submit</button>
       </div>
     </div>
   </div>
