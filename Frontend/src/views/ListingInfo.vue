@@ -25,7 +25,7 @@
       <div class="row" v-if="user.uid != listingInfo.userid">
         <div class="col"></div>
 
-        <div class="col-3">
+        <div class="col-5 col-md-3">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">$</span>
             <input type="text" :class="{ 'form-control': true, 'me-2': true, 'is-invalid': !bidPriceIsValid }"

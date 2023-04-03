@@ -6,7 +6,7 @@
       <div class="card mb-2 mycard">
         <img :src="listingData.listing_image_url" class="card-img-top img-fluid"
           style="height: 200px; object-fit: cover;">
-        <span class="position-absolute top-0 start-100 translate-middle p-2 bg-black border border-light rounded-circle" v-if="listingData.highest_current_bidder_userid == uid">
+        <span class="position-absolute top-0 start-100 translate-middle p-2 bg-black border border-light rounded-circle" v-if="listingData.highest_current_bidder_userid && listingData.highest_current_bidder_userid == uid">
           <font-awesome-icon :icon="['fas', 'crown']" style="color: #ffffff;" />
         </span>
         <div class="card-body">
