@@ -25,7 +25,7 @@
           <p class="card-text text-start text-wrap">
             <span style="color: #C6C6C6">Listed by: {{ listingData.username ? listingData.username : currentUser
             }}<br /></span>
-            Auction ends on <br> {{ timeConverter(listingData.auction_end_datetime) }}
+            {{ timeLeft(listingData.auction_end_datetime) }} ({{ timeConverter(listingData.auction_end_datetime) }})
           </p>
           <hr>
           <p class="card-text m-0">Starting bid: ${{ listingData.starting_bid }}</p>
@@ -53,15 +53,17 @@ export default {
       type: String
     }
   },
-  mounted(){
-    console.log(this.uid)
+  mounted() {
+    setInterval(() => {
+      this.$forceUpdate();
+    }, 1000);
   },
   methods: {
     timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
-      var year = a.getFullYear();
-      var month = ("0" + (a.getMonth() + 1)).slice(-2);
-      var date = ("0" + a.getDate()).slice(-2);
+      var year = a.getFullYear().toString().substr(-2);
+      var month = (a.getMonth() + 1).toString();
+      var date = a.getDate().toString();
       var hour = a.getHours();
       var time = "";
       if (hour >= 12) {
@@ -75,6 +77,24 @@ export default {
       var min = ("0" + a.getMinutes()).slice(-2);
       var formattedDate = date + '/' + month + '/' + year + ' ' + hour + ":" + min + time;
       return formattedDate;
+    },
+    timeLeft(unixTimestamp) {
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      const timeDiff = unixTimestamp - currentTimestamp;
+      if (timeDiff <= 0) {
+        return "Ended";
+      } else {
+        const daysLeft = Math.floor(timeDiff / (24 * 3600));
+        let timeRemaining = timeDiff % (24 * 3600);
+        const hoursLeft = Math.floor(timeRemaining / 3600);
+        timeRemaining %= 3600;
+        const minutesLeft = Math.floor(timeRemaining / 60);
+        const secondsLeft = timeRemaining % 60;
+        const timeArr = [`${daysLeft}d`, `${hoursLeft}h`, `${minutesLeft}m`, `${secondsLeft}s`];
+        return timeArr.filter(function(element) {
+          return Number(element.slice(0, -1)) > 0;
+        }).slice(0, 2).join(" ") + " left"
+      }
     }
   }
 }

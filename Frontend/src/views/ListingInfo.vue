@@ -8,8 +8,9 @@
       <div class="row">
         <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $" +
           listingInfo.starting_bid }}</h4>
-        <p class="fw-medium fs-5 mb-0">Auction Ends on {{
-          timeConverter(listingInfo.auction_end_datetime) }}</p>
+        <p class="fw-medium fs-5 mb-0">
+          <i class="bi bi-clock"></i> Time Left: {{ timeLeft(listingInfo.auction_end_datetime) }} ({{ timeConverter(listingInfo.auction_end_datetime) }})
+        </p>
       </div>
       <div class="row mt-2">
         <div class="col-5">
@@ -131,6 +132,11 @@ export default {
       myBids: true,
     };
   },
+  mounted() {
+    setInterval(() => {
+      this.$forceUpdate();
+    }, 1000);
+  },
   methods: {
     validateEndDate() {
       if (!this.endDate) {
@@ -225,9 +231,9 @@ export default {
     },
     timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
-      var year = a.getFullYear();
-      var month = ("0" + (a.getMonth() + 1)).slice(-2);
-      var date = ("0" + a.getDate()).slice(-2);
+      var year = a.getFullYear().toString().substr(-2);
+      var month = (a.getMonth() + 1).toString();
+      var date = a.getDate().toString();
       var hour = a.getHours();
       var time = "";
       if (hour >= 12) {
@@ -241,6 +247,24 @@ export default {
       var min = ("0" + a.getMinutes()).slice(-2);
       var formattedDate = date + '/' + month + '/' + year + ' ' + hour + ":" + min + time;
       return formattedDate;
+    },
+    timeLeft(unixTimestamp) {
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      const timeDiff = unixTimestamp - currentTimestamp;
+      if (timeDiff <= 0) {
+        return "Ended";
+      } else {
+        const daysLeft = Math.floor(timeDiff / (24 * 3600));
+        let timeRemaining = timeDiff % (24 * 3600);
+        const hoursLeft = Math.floor(timeRemaining / 3600);
+        timeRemaining %= 3600;
+        const minutesLeft = Math.floor(timeRemaining / 60);
+        const secondsLeft = timeRemaining % 60;
+        const timeArr = [`${daysLeft}d`, `${hoursLeft}h`, `${minutesLeft}m`, `${secondsLeft}s`];
+        return timeArr.filter(function(element) {
+          return Number(element.slice(0, -1)) > 0;
+        }).slice(0, 2).join(" ") + " left"
+      }
     },
     placeBid() {
       if (!this.bidPrice) {
