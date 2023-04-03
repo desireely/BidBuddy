@@ -257,6 +257,9 @@ export default {
       } else if (this.bidPrice <= this.listingInfo.highest_current_bid) {
         this.bidErrMsg = `Bid price must be higher than $${this.listingInfo.highest_current_bid}.`;
         this.bidPriceIsValid = false;
+      } else if (this.bidPrice < this.listingInfo.starting_bid) {
+        this.bidErrMsg = `Bid price must be at least $${this.listingInfo.starting_bid}.`;
+        this.bidPriceIsValid = false;
       } else {
         this.bidErrMsg = null;
         this.bidPriceIsValid = true;
