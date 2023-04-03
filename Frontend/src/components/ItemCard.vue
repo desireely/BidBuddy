@@ -49,29 +49,23 @@ export default {
   methods: {
     timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
-      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       var year = a.getFullYear();
-      var month = months[a.getMonth()];
-      var date = a.getDate();
+      var month = ("0" + (a.getMonth() + 1)).slice(-2);
+      var date = ("0" + a.getDate()).slice(-2);
       var hour = a.getHours();
       var time = "";
-      if (hour > 12) {
-        hour = hour - 12
-        time = "pm"
+      if (hour >= 12) {
+        time = "pm";
+        if (hour > 12) {
+          hour -= 12;
+        }
       } else {
-        time = "am"
+        time = "am";
       }
-      var min = a.getMinutes();
-      if (min < 9) {
-        min = "0" + min.toString()
-      }
-
-      var sec = a.getSeconds();
-      var formattedDate = date + '/' + (a.getMonth() + 1) + '/' + year + ' (' + (hour) + "." + min + time + ")";
-      // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min;
-      // console.log(time);
+      var min = ("0" + a.getMinutes()).slice(-2);
+      var formattedDate = date + '/' + month + '/' + year + ' ' + hour + ":" + min + time;
       return formattedDate;
-    },
+    }
   }
 }
 </script>
