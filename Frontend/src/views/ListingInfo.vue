@@ -41,19 +41,14 @@
           <button @click="placeBid" class="btn btn-outline-dark">Place Bid</button>
         </div>
       </div>
-      <div class="row"
+      <div class="row justify-content-end"
         v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo)">
-        <div class="col"></div>
-        <div class="col-2"></div>
-
         <div class="col-auto">
           <button @click="displayQRCode" class="btn btn-outline-dark">Confirm Transaction</button>
         </div>
       </div>
-      <div class="row" v-else-if="listingInfo.status == 'closed' && listingInfo.can_reopen">
-        <div class="col"></div>
-
-        <div class="col-5">
+      <div class="row justify-content-end" v-else-if="listingInfo.status == 'closed' && listingInfo.can_reopen">
+        <div class="col-lg-6 col-md-8 col-sm-8 col-8">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">New Bidding End Date</span>
             <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !endDateIsValid }"
