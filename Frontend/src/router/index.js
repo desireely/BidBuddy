@@ -9,6 +9,7 @@ import Login from "../views/Login.vue";
 import ListingInfo from "../views/ListingInfo.vue";
 import NoResults from "../views/NoResults.vue";
 import ConfirmTransaction from "../views/ConfirmTransaction.vue";
+import Landing from "../views/Landing.vue";
 
 import { auth } from "../../firebaseConfig.js";
 
@@ -70,6 +71,11 @@ const router = createRouter({
       name: "Confirm Transaction",
       component: ConfirmTransaction,
       beforeEnter: handleTransaction,
+    },
+    {
+      path: "/landing",
+      name: "Landing",
+      component: Landing,
     },
   ],
 });
