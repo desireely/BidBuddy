@@ -38,7 +38,7 @@ export default {
       axios.post(this.$confirmTransaction, info)
         .then(response => {
           console.log(response.data)
-          this.transactionMsg = ["Transaction confirmed successfully!", "Redirecting to home page..."]
+          this.transactionMsg = ["Transaction confirmed!", "Redirecting to home page..."]
           setTimeout(() => {
             router.push('/')
           }, 3000);
