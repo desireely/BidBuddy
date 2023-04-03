@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Login</h1>
+  <div class>
+    <h1 class>Login</h1>
     <div class="w-50 mx-auto">
       <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
@@ -58,9 +58,9 @@ export default {
   },
   created() {
     if (this.$route.query.listingID && this.$route.query.data) {
-      this.redirect = { 
-        path: '/confirmtransaction', 
-        query: { listingID: this.$route.query.listingID, data: this.$route.query.data } 
+      this.redirect = {
+        path: '/confirmtransaction',
+        query: { listingID: this.$route.query.listingID, data: this.$route.query.data }
       }
     } else {
       this.redirect = '/'

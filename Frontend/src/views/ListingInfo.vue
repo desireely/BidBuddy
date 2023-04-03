@@ -2,12 +2,13 @@
   <div>
     <h1>{{ listingInfo.listing_name }}</h1>
     <h5 class="" style="color: #C6C6C6">Listed by: {{ sellerName }}</h5>
+    <p class="mb-1" style="color: #C6C6C6">Posted on: {{ timeConverter(listingInfo.datetime_created) }}</p>
     <div class="container p-3">
       <div class="row">
         <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $" +
           listingInfo.starting_bid }}</h4>
-        <p class="mb-3 fw-medium fs-5">Auction Ends on <span class="fw-medium">{{
-          timeConverter(listingInfo.auction_end_datetime) }}</span></p>
+        <p class="fw-medium fs-5 mb-0">Auction Ends on {{
+          timeConverter(listingInfo.auction_end_datetime) }}</p>
       </div>
       <div class="row mt-2">
         <div class="col-5">

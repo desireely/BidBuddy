@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="container-fluid">
-  <div class="row align-items-center justify-content-center" style="height: calc(100vh - 200px); overflow: hidden;">
-    <div class="col text-center">
-      <h1 class="flashy">{{ transactionMsg[0] }}</h1>
-      <p class="fs-5">{{ transactionMsg[1] }}</p>
+      <div class="row align-items-center justify-content-center" style="height: calc(100vh - 200px); overflow: hidden;">
+        <div class="col text-center">
+          <h1 class="">{{ transactionMsg[0] }}</h1>
+          <p class="fs-5">{{ transactionMsg[1] }}</p>
+        </div>
+      </div>
     </div>
-  </div>
-  </div>
   </div>
 </template>
 
@@ -54,6 +54,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
 .flashy {
   font-family: 'Fredoka One', sans-serif;
   font-weight: bold;
