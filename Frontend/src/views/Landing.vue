@@ -8,7 +8,7 @@
         <p class="lead mb-4">Make online purchasing easier and more transparent than ever with a marketplace that empowers
           users to get the best deals with our integrated bidding system.</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-          <router-link :to="{ path: '/signup' }" class="btn btn-dark btn-lg px-4 gap-3">Sign Up</router-link>
+          <router-link :to="{ path: '/signup' }" class="btn btn-dark btn-lg px-4 gap-3">Get Started</router-link>
           <router-link :to="{ path: '/login' }" class="btn btn-outline-dark btn-lg px-4">Login</router-link>
         </div>
       </div>
