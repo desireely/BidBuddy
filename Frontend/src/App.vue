@@ -94,7 +94,7 @@
                 <h3 class="d-flex align-items-center p-1 text-dark text-decoration-none text-center ms-3">
                   BidBuddy</h3>
               </div>
-              <div v-if="user" class="col-4 ms-3 d-flex align-items-center">
+              <div v-if="user" class="col-2 col-sm-4 ms-3 d-flex align-items-center">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                   aria-controls="offcanvasNavbar">
                   <span class="navbar-toggler-icon"></span>
