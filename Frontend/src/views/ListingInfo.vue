@@ -42,12 +42,12 @@
         </div>
       </div>
       <div class="row justify-content-end"
-        v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo)">
+        v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo) && listingInfo.highest_current_bid">
         <div class="col-auto">
           <button @click="displayQRCode" class="btn btn-outline-dark">Confirm Transaction</button>
         </div>
       </div>
-      <div class="row justify-content-end" v-else-if="listingInfo.status == 'closed' && listingInfo.can_reopen">
+      <div class="row justify-content-end" v-else-if="listingInfo.status == 'closed' && listingInfo.can_reopen && listingInfo.highest_current_bid">
         <div class="col-lg-6 col-md-8 col-sm-8 col-8">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">New Bidding End Date</span>
@@ -66,7 +66,7 @@
     </div>
 
     <div
-      v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
+      v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo) && listingInfo.highest_current_bid">
       <h4>Scan the QR Code to confirm transaction:</h4>
       <div class="row">
         <div class="col">
