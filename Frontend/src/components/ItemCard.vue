@@ -91,9 +91,12 @@ export default {
         const minutesLeft = Math.floor(timeRemaining / 60);
         const secondsLeft = timeRemaining % 60;
         const timeArr = [`${daysLeft}d`, `${hoursLeft}h`, `${minutesLeft}m`, `${secondsLeft}s`];
-        return timeArr.filter(function(element) {
-          return Number(element.slice(0, -1)) > 0;
-        }).slice(0, 2).join(" ") + " left"
+
+        var result = timeArr
+        while (result && Number(result[0].slice(0, -1)) == 0) {
+          result.shift();
+        }
+        return result.slice(0, 2).join(" ");
       }
     }
   }
