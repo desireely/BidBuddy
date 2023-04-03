@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row align-items-center justify-content-center" style="height: calc(100vh - 200px); overflow: hidden;">
         <div class="col text-center">
-          <h1 class="">{{ transactionMsg[0] }}</h1>
+          <h1 class="flashy">{{ transactionMsg[0] }}</h1>
           <p class="fs-5">{{ transactionMsg[1] }}</p>
         </div>
       </div>
