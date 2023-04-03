@@ -23,9 +23,9 @@
             {{ passwordErrMsg }}
           </div>
         </div>
-        <div class="text-end">
-          <button class="btn btn-outline-dark" @click="login" v-if="email && password">Submit</button>
-          <button class="btn btn-outline-secondary" disabled v-else>Submit</button>
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-dark w-100" @click="login" v-if="email && password">Login</button>
+          <button class="btn btn-dark w-100" style="background-color:#000000" disabled v-else>Login</button>
         </div>
       </div>
     </div>

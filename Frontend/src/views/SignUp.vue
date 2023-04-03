@@ -33,10 +33,10 @@
             Password must contain at least 6 characters.
           </div>
         </div>
-        <div class="text-end">
-          <button class="btn btn-outline-dark" @click="validate"
-            v-if="email && username && teleuser && password">Submit</button>
-          <button class="btn btn-outline-secondary" disabled v-else>Submit</button>
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-dark w-100" @click="validate" v-if="email && username && teleuser && password">Sign
+            Up</button>
+          <button class="btn btn-dark w-100" disabled v-else>Sign Up</button>
         </div>
       </div>
     </div>
