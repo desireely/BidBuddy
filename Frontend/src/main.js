@@ -8,12 +8,11 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faHatWizard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faHatWizard);
-Vue.component("font-awesome-icon", FontAwesomeIcon);
-
 const app = createApp(App);
 app.use(router);
 app.mount("#app");
+library.add(faHatWizard);
+app.component("font-awesome-icon", FontAwesomeIcon);
 
 // Global Variables
 app.config.globalProperties.$listing = "http://127.0.0.1:5007/listing";
