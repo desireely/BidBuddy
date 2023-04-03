@@ -90,10 +90,10 @@
           <!-- Top navbar -->
           <div class="container-fluid p-0 border-bottom sticky-top bg-white">
             <nav class="navbar navbar-expand-lg">
-              <div v-if="!user" class="col-3">
+              <router-link to="/landing" v-if="!user" class="col-3" style="text-decoration: none; color: inherit;">
                 <h3 class="d-flex align-items-center p-1 text-dark text-decoration-none text-center ms-3">
                   BidBuddy</h3>
-              </div>
+              </router-link>
               <div v-if="user" class="col-2 col-sm-4 ms-3 d-flex align-items-center">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                   aria-controls="offcanvasNavbar">
