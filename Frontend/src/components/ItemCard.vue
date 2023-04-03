@@ -19,7 +19,7 @@
             <div class="col-5 text-end" v-if="!mylistings">
               <router-link
                 :to="{ path: '/listinginfo', query: { listingID: listingData.listingid, username: (listingData.username ? listingData.username : currentUser) } }"
-                class="btn btn-outline-dark py-1 px-2">Place Bid</router-link>
+                class="btn btn-outline-dark py-1 px-2" v-if="listingData.userid != uid">Place Bid</router-link>
             </div>
           </div>
           <p class="card-text text-start text-wrap">

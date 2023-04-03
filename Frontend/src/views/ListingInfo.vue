@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>{{ listingInfo.listing_name }}</h1>
-    <span class="badge bg-black mb-2">You're the highest bidder!</span>
+    <span class="badge bg-black mb-2" v-if="listingInfo.highest_current_bidder_userid && listingInfo.highest_current_bidder_userid == user.uid">You're the highest bidder!</span>
     <h5 class="" style="color: #C6C6C6">Listed by: {{ sellerName }}</h5>
     <p class="mb-1" style="color: #C6C6C6">Posted on: {{ timeConverter(listingInfo.datetime_created) }}</p>
     <div class="container p-3">

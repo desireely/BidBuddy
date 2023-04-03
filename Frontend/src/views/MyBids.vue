@@ -9,7 +9,7 @@
       <p class="fs-5" style="color: #C6C6C6">You currently have no bids.</p>
     </div>
     <div class="row d-flex mx-2" v-else>
-      <ItemCard v-for="listing in this.listings" :listingData="listing" />
+      <ItemCard v-for="listing in this.listings" :listingData="listing" :uid="user_id"/>
     </div>
   </div>
 </template>
