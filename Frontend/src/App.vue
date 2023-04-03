@@ -107,7 +107,7 @@
                     aria-describedby="search" v-model="searchInput">
                 </div>
               </div>
-              <div class="col d-flex justify-content-end">
+              <div class="col d-flex justify-content-end me-3">
                 <router-link to="/newlisting" class="btn btn-dark mx-2 px-3 py-2" v-if="user">
                   Create a listing
                 </router-link>
