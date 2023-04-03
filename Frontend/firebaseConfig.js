@@ -5,10 +5,13 @@ import { getFirestore } from "firebase/firestore";
 
 // firebase init
 const firebaseConfig = {
-  apiKey: "AIzaSyCgKc1xonEp5sma8rnGWtMIXAsnryW4pW8",
-  authDomain: "bidbuddy-dc913.firebaseapp.com",
-  projectId: "bidbuddy-dc913",
-  appId: "1:16994765557:web:efbe2bdb34b772e4f0d3bc",
+  apiKey: "AIzaSyD24Sfv8QG_YD1aaGMCOF-DlnGv6VWjnek",
+  authDomain: "esd-project-listing.firebaseapp.com",
+  projectId: "esd-project-listing",
+  storageBucket: "esd-project-listing.appspot.com",
+  messagingSenderId: "877925820233",
+  appId: "1:877925820233:web:0c468f7d123ccc39145c98",
+  measurementId: "G-CZY44KZTDJ"
 };
 
 const app = firebase.initializeApp(firebaseConfig);
@@ -18,4 +21,4 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 // // export utils/refs
-export { auth };
+export { auth, db };

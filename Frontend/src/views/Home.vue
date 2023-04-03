@@ -1,8 +1,13 @@
 <template>
   <div>
     <h1 class="pb-3">Listings</h1>
-    <div class="row d-flex justify-content-between mx-4">
-      <ItemCard v-for="listing in this.listings" :listingData="listing" />
+    <div class="row d-flex mx-2">
+      <ItemCard v-for="listing in this.filteredListings" :listingData="listing" v-if="filteredListings && filteredListings.length > 0"/>
+      <div class="container-fluid d-flex justify-content-center align-items-center"
+        style="height: calc(100vh - 200px); overflow: hidden;" v-else-if="searchInput">
+        <p class="fs-5" style="color: #C6C6C6">No results found.</p>
+      </div>
+      <ItemCard v-for="listing in this.listings" :listingData="listing" v-else/>
     </div>
   </div>
 </template>
@@ -12,16 +17,26 @@ import axios from 'axios';
 import ItemCard from "../components/ItemCard.vue";
 export default {
   name: 'Home',
+  components: { ItemCard },
+  props: {
+    user: Object,
+    token: String,
+    searchInput: String,
+  },
   data() {
     return {
       listings: [],
+      filteredListings: [],
     };
   },
-  components: { ItemCard },
+  watch: {
+    searchInput: function(newVal, oldVal) {
+      this.runSearch();
+    }
+  },
   methods: {
     getListings() {
-      const path = 'http://127.0.0.1:5000/listing';
-      axios.get(path)
+      axios.get(this.$showListing)
         .then((res) => {
           this.listings = res.data.data.listings;
           console.log(res.data.data.listings);
@@ -30,6 +45,19 @@ export default {
           console.error(error);
         });
     },
+    runSearch() {
+      if (this.searchInput) {
+        console.log(this.searchInput)
+        const keyword = this.searchInput.toLowerCase();
+        const filteredData = this.listings.filter(item => {
+          return item.listing_name.toLowerCase().includes(keyword);
+        });
+        
+        this.filteredListings = filteredData;
+      } else {
+        this.filteredListings = [];
+      }
+    }
   },
   created() {
     this.getListings();

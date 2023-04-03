@@ -3,11 +3,11 @@
     <h1>New Listing</h1>
     <div class="container">
       <div class="row">
-        <div class="col-4 my-auto">
+        <div class="col-12 col-md-4 my-auto py-3">
           <div class="card">
             <img :src="listingImgURL" class="card-img-top" />
-            <label for="img-upload" class="custom-file-upload">
-              <br /><br /><br />{{ uploadTxt }}
+            <label for="img-upload" class="custom-file-upload d-flex align-items-end pb-5 pb-md-4 pb-xl-5">
+              {{ uploadTxt }}
             </label>
             <input id="img-upload" type="file" accept="image/*" @change="displayImg"
               :class="{ 'form-control': true, 'is-invalid': !listingImageIsValid }" ref="imgInput" />
@@ -16,7 +16,7 @@
             </div>
           </div>
         </div>
-        <div class="col-8">
+        <div class="col-12 col-md-8">
           <div class="mb-3">
             <label for="listing-name" class="form-label">Listing Name</label>
             <input type="text" :class="{ 'form-control': true, 'is-invalid': !listingNameIsValid }" v-model="listingName"
@@ -42,14 +42,6 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="starting-date" class="form-label">Bidding Start Date</label>
-            <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !startDateIsValid }"
-              v-model="startDate" class="form-control" id="starting-date" @change="validateStartDate()">
-            <div class="invalid-feedback">
-              {{ startDateErrMsg }}
-            </div>
-          </div>
-          <div class="mb-3">
             <label for="ending-date" class="form-label">Bidding End Date</label>
             <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !endDateIsValid }"
               v-model="endDate" id="ending-date" @change="validateEndDate()">
@@ -68,11 +60,15 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="successModalLabel">Listing created!</h1>
+              <h1 class="modal-title fs-5" id="successModalLabel">{{ listingStatus }}</h1>
             </div>
             <div class="modal-body">
+              {{ listingCreation }}
             </div>
             <div class="modal-footer">
+              <router-link to="/mylistings">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">My Listings</button>
+              </router-link>
               <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
@@ -87,9 +83,16 @@
 import axios from 'axios';
 export default {
   name: 'NewListing',
+  props: {
+    user: Object,
+    token: String
+  },
   data() {
     return {
-      listingImgURL: 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a',
+      listingStatus: null,
+      listingCreation: null,
+
+      listingImgURL: 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg',
       uploadTxt: "Upload an Image",
       listingImage: null,
       listingImageIsValid: true,
@@ -106,10 +109,6 @@ export default {
       startingBidIsValid: true,
       startingBidErrMsg: null,
 
-      startDate: null,
-      startDateIsValid: true,
-      startDateErrMsg: null,
-
       endDate: null,
       endDateIsValid: true,
       endDateErrMsg: null,
@@ -117,10 +116,10 @@ export default {
   },
   methods: {
     resetInputs() {
-      [this.listingImage, this.listingName, this.listingDesc, this.startingBid, this.startDate, this.endDate] = [null, null, null, null, null, null];
-      [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.startingBidIsValid, this.startDateIsValid, this.endDateIsValid] = [true, true, true, true, true, true];
-      [this.listingNameErrMsg, this.listingDescErrMsg, this.startingBidErrMsg, this.startDateErrMsg, this.endDateErrMsg] = [null, null, null, null, null];
-      this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a';
+      [this.listingImage, this.listingName, this.listingDesc, this.startingBid, this.endDate] = [null, null, null, null, null];
+      [this.listingImageIsValid, this.listingNameIsValid, this.listingDescIsValid, this.startingBidIsValid, this.endDateIsValid] = [true, true, true, true, true];
+      [this.listingNameErrMsg, this.listingDescErrMsg, this.startingBidErrMsg, this.endDateErrMsg] = [null, null, null, null];
+      this.listingImgURL = 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg';
       this.uploadTxt = "Upload an Image";
       this.$refs.imgInput.value = null;
     },
@@ -132,14 +131,14 @@ export default {
           this.uploadTxt = "";
           this.listingImageIsValid = true;
         } else {
-          this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a'
+          this.listingImgURL = 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg'
           this.listingImage = null;
           this.listingImageIsValid = false;
           this.uploadTxt = "Upload an Image";
           this.$refs.imgInput.value = null;
         }
       } else {
-        this.listingImgURL = 'https://firebasestorage.googleapis.com/v0/b/mypr-ad6b9.appspot.com/o/uploadImg.svg?alt=media&token=73f66d55-3c08-4e7f-8193-7db0dbb8a43a';
+        this.listingImgURL = 'https://i.pinimg.com/originals/82/50/eb/8250ebbe710fdc11dc3332e02ad7cf42.jpg';
         this.listingImage = null;
         this.listingImageIsValid = false;
         this.uploadTxt = "Upload an Image";
@@ -179,40 +178,22 @@ export default {
         this.startingBidIsValid = true;
       }
     },
-    validateStartDate() {
-      if (!this.startDate) {
-        this.startDateErrMsg = "Field is required.";
-        this.startDateIsValid = false;
-      } else if (new Date(this.startDate) < new Date()) {
-        this.startDateErrMsg = "Start date has already passed.";
-        this.startDateIsValid = false;
-      } else {
-        this.startDateErrMsg = null;
-        this.startDateIsValid = true;
-      }
-    },
     validateEndDate() {
       if (!this.endDate) {
         this.endDateErrMsg = "Field is required.";
         this.endDateIsValid = false;
-      } else if (new Date(this.endDate) < new Date()) {
-        this.endDateErrMsg = "End date has already passed.";
+      } else if (new Date(this.endDate) <= new Date()) {
+        this.endDateErrMsg = "End date must be after current date.";
         this.endDateIsValid = false;
-      } else if (this.startDate && this.endDate) {
-        if (new Date(this.endDate) <= new Date(this.startDate)) {
-          this.endDateErrMsg = "End date must be after start date.";
-          this.endDateIsValid = false;
-        } else {
-          this.endDateErrMsg = null;
-          this.endDateIsValid = true;
-        }
+      } else {
+        this.endDateErrMsg = null;
+        this.endDateIsValid = true;
       }
     },
     validate() {
       this.validateName();
       this.validateDesc();
       this.validateBid();
-      this.validateStartDate();
       this.validateEndDate();
 
       if (this.listingImage) {
@@ -221,7 +202,7 @@ export default {
         this.listingImageIsValid = false;
       }
 
-      if (this.listingImageIsValid && this.listingNameIsValid && this.listingDescIsValid && this.startingBidIsValid && this.startDateIsValid && this.endDateIsValid) {
+      if (this.listingImageIsValid && this.listingNameIsValid && this.listingDescIsValid && this.startingBidIsValid && this.endDateIsValid) {
         this.newListing();
       }
     },
@@ -232,7 +213,7 @@ export default {
         var base64String = reader.result.replace('data:', '').replace(/^.+,/, '');
 
         var listing = {
-          auction_start_datetime: this.startDate,
+          userid: this.user.uid,
           auction_end_datetime: this.endDate,
           listing_description: this.listingDesc,
           listing_image: {
@@ -241,19 +222,27 @@ export default {
             image: base64String
           },
           listing_name: this.listingName,
-          starting_bid: this.startingBid
+          starting_bid: Number(this.startingBid)
         };
+        console.log(listing)
 
-        axios.post('http://127.0.0.1:5000/listing', { data: listing })
+        axios.post(this.$createListing, listing)
           .then(response => {
             console.log(response.data)
+            this.listingStatus = "Listing created!";
+            this.listingCreation = `You've created a new listing for ${this.listingName}!`
             this.resetInputs();
             var myModal = new bootstrap.Modal(this.$refs.successModal)
             var modalToggle = this.$refs.successModal;
             myModal.show(modalToggle);
           })
           .catch(error => {
-            console.log(error)
+            console.log(error);
+            this.listingStatus = "Listing was not created!";
+            this.listingCreation = "There was an error creating your listing."
+            var myModal = new bootstrap.Modal(this.$refs.successModal)
+            var modalToggle = this.$refs.successModal;
+            myModal.show(modalToggle);
           });
       }
     }

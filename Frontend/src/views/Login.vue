@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h1>Login</h1>
-    <div class="w-50 mx-auto">
-      <form>
+  <div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 200px); overflow: hidden;">
+    <div class="card w-50 mx-auto p-3">
+      <div class="card-body">
+        <h1 class="card-title text-center">Login</h1>
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
           <input type="email" :class="{ 'form-control': true, 'is-invalid': !emailIsValid }" id="email" v-model="email">
@@ -23,11 +23,11 @@
             {{ passwordErrMsg }}
           </div>
         </div>
-        <div class="text-end">
-          <button class="btn btn-outline-dark" @click="login" v-if="email && password">Submit</button>
-          <button class="btn btn-outline-secondary" disabled v-else>Submit</button>
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-dark w-100" @click="login" v-if="email && password">Login</button>
+          <button class="btn btn-dark w-100" style="background-color:#000000" disabled v-else>Login</button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -38,6 +38,10 @@ import router from "../router";
 
 export default {
   name: 'Login',
+  props: {
+    user: Object,
+    token: String
+  },
   data() {
     return {
       showPassword: false,
@@ -50,13 +54,25 @@ export default {
 
       emailErrMsg: null,
       passwordErrMsg: null,
+
+      redirect: null,
     };
+  },
+  created() {
+    if (this.$route.query.listingID && this.$route.query.data) {
+      this.redirect = {
+        path: '/confirmtransaction',
+        query: { listingID: this.$route.query.listingID, data: this.$route.query.data }
+      }
+    } else {
+      this.redirect = '/'
+    }
   },
   methods: {
     login() {
-      event.preventDefault();
       [this.emailIsValid, this.passwordIsValid, this.emailErrMsg, this.passwordErrMsg] = [true, true, null, null];
 
+      const self = this;
       auth.signInWithEmailAndPassword(this.email, this.password)
         .then(function () {
           const user = auth.currentUser;
@@ -66,12 +82,8 @@ export default {
             if (user) {
               user.getIdToken().then(function (token) {
                 // Use the token here
-                console.log(token)
-                sessionStorage.setItem('token', token);
-                const userid = user.uid
-                sessionStorage.setItem('userid', userid);
-                console.log(userid)
-                router.pushReload({ name: 'Home' });
+                console.log(self.user.uid)
+                router.pushReload(self.redirect);
               }).catch(function (error) {
                 // Handle error here
                 console.log(error.message)
