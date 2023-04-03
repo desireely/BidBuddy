@@ -96,7 +96,7 @@ export default {
         while (result && Number(result[0].slice(0, -1)) == 0) {
           result.shift();
         }
-        return result.slice(0, 2).join(" ");
+        return result.slice(0, 2).join(" ") + " left";
       }
     }
   }
