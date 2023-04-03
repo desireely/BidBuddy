@@ -7,47 +7,48 @@
   <div>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
       <div class="border-end min-vh-100 px-3">
-          <div class="py-3">
-            <h3 class="d-flex position-relative align-items-center p-1 text-dark text-decoration-none text-center">
-              BidBuddy <button type="button" class="btn-close position-absolute" style="right:0;top:0;font-size:0.7em" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </h3>
-            <div class="input-group p-1 mb-1">
-              <span class="input-group-text bg-white border border-end-0" id="search">
-                <i class="bi bi-search"></i>
-              </span>
-              <input type="text" class="form-control border border-start-0" placeholder="Search" aria-label="Search"
-                aria-describedby="search" v-model="searchInput">
-            </div>
-            <!-- Navigation links in sidebar-->
-            <ul class="nav nav-pills flex-column mb-auto">
-              <li class="nav-item">
-                <router-link to="/" class="nav-link text-dark" active-class="bg-dark text-white">
-                  <i class="bi bi-house me-2" width="16" height="16"></i>
-                  Home
-                </router-link>
-              </li>
-              <li>
-                <router-link to="/mylistings" class="nav-link text-dark" active-class="bg-dark text-white">
-                  <i class="bi bi-bag me-2" width="16" height="16"></i>
-                  My Listings
-                </router-link>
-              </li>
-              <li>
-                <router-link to="/mybids" class="nav-link text-dark" active-class="bg-dark text-white">
-                  <i class="bi bi-coin me-2" width="16" height="16"></i>
-                  My Bids
-                </router-link>
-              </li>
-              <li>
-                <button class="nav-link text-dark" active-class="bg-dark text-white" @click="logout">
-                  <i class="bi bi-box-arrow-right me-2" width="16" height="16"></i>
-                  Log Out
-                </button>
-              </li>
-            </ul>
+        <div class="py-3">
+          <h3 class="d-flex position-relative align-items-center p-1 text-dark text-decoration-none text-center">
+            BidBuddy <button type="button" class="btn-close position-absolute" style="right:0;top:0;font-size:0.7em"
+              data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </h3>
+          <div class="input-group p-1 mb-1">
+            <span class="input-group-text bg-white border border-end-0" id="search">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control border border-start-0" placeholder="Search" aria-label="Search"
+              aria-describedby="search" v-model="searchInput">
           </div>
+          <!-- Navigation links in sidebar-->
+          <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+              <router-link to="/" class="nav-link text-dark" active-class="bg-dark text-white">
+                <i class="bi bi-house me-2" width="16" height="16"></i>
+                Home
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/mylistings" class="nav-link text-dark" active-class="bg-dark text-white">
+                <i class="bi bi-bag me-2" width="16" height="16"></i>
+                My Listings
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/mybids" class="nav-link text-dark" active-class="bg-dark text-white">
+                <i class="bi bi-coin me-2" width="16" height="16"></i>
+                My Bids
+              </router-link>
+            </li>
+            <li>
+              <button class="nav-link text-dark" active-class="bg-dark text-white" @click="logout">
+                <i class="bi bi-box-arrow-right me-2" width="16" height="16"></i>
+                Log Out
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
+    </div>
 
     <div class="container-fluid h-100 d-flex flex-column">
       <!-- h-100 takes the full height of the container-->
@@ -94,7 +95,8 @@
                   BidBuddy</h3>
               </div>
               <div v-if="user" class="col-4 ms-3 d-flex align-items-center">
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                  aria-controls="offcanvasNavbar">
                   <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="input-group p-1 mx-3 d-none d-sm-flex">

@@ -62,8 +62,8 @@ export default {
         time = "am"
       }
       var min = a.getMinutes();
-      if (min.toString().length == 1) {
-        min = min.toString() + "0"
+      if (min < 9) {
+        min = "0" + min.toString()
       }
 
       var sec = a.getSeconds();

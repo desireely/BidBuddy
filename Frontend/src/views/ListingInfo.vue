@@ -39,7 +39,8 @@
           <button @click="placeBid" class="btn btn-outline-dark">Place Bid</button>
         </div>
       </div>
-      <div class="row" v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo)">
+      <div class="row"
+        v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo)">
         <div class="col"></div>
         <div class="col-2"></div>
 
@@ -67,7 +68,8 @@
       </div>
     </div>
 
-    <div v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
+    <div
+      v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
       <h4>Scan the QR Code to confirm transaction:</h4>
       <div class="row">
         <div class="col">
@@ -149,26 +151,26 @@ export default {
     reopen() {
       axios.post(`${this.$reopenlisting}/${this.$route.query.listingID}`, { auction_end_datetime: this.endDate })
         .then((res) => {
-            console.log(res.data);
-            this.myBids = false;
-            this.bidStatus = "Listing Reopened!";
-            this.bidCreation = `You have reopened ${this.listingInfo.listing_name}!`
+          console.log(res.data);
+          this.myBids = false;
+          this.bidStatus = "Listing Reopened!";
+          this.bidCreation = `You have reopened ${this.listingInfo.listing_name}!`
 
-            this.endDate = null;
-            this.endDateErrMsg = null;
-            var myModal = new bootstrap.Modal(this.$refs.successModal)
-            var modalToggle = this.$refs.successModal;
-            myModal.show(modalToggle);
-          })
-          .catch((error) => {
-            console.error(error);
-            this.bidStatus = "Listing was not reopened!";
-            this.bidCreation = "There was an error reopening your listing."
+          this.endDate = null;
+          this.endDateErrMsg = null;
+          var myModal = new bootstrap.Modal(this.$refs.successModal)
+          var modalToggle = this.$refs.successModal;
+          myModal.show(modalToggle);
+        })
+        .catch((error) => {
+          console.error(error);
+          this.bidStatus = "Listing was not reopened!";
+          this.bidCreation = "There was an error reopening your listing."
 
-            var myModal = new bootstrap.Modal(this.$refs.successModal)
-            var modalToggle = this.$refs.successModal;
-            myModal.show(modalToggle);
-          });
+          var myModal = new bootstrap.Modal(this.$refs.successModal)
+          var modalToggle = this.$refs.successModal;
+          myModal.show(modalToggle);
+        });
     },
     displayQRCode() {
       console.log("Current User: ", this.user.uid)
@@ -239,8 +241,8 @@ export default {
         time = "am"
       }
       var min = a.getMinutes();
-      if (min.toString().length == 1) {
-        min = min.toString() + "0"
+      if (min < 9) {
+        min = "0" + min.toString()
       }
 
       var sec = a.getSeconds();
