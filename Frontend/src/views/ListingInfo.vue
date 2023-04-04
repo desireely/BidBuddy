@@ -6,15 +6,17 @@
     <div class="container p-3">
       <div class="row">
         <div class="col">
-          <span class="fs-4 fw-bold">{{ listingInfo.highest_current_bid ? "Highest Bid: $" +
-            listingInfo.highest_current_bid :
-            "Starting Bid: $"
-            +
-            listingInfo.starting_bid }}</span>
-          <span v-if="listingInfo.highest_current_bidder_userid && listingInfo.highest_current_bidder_userid == user.uid"
-            class="badge bg-black ms-3">You're
-            the
-            highest bidder!</span>
+          <div class="d-flex">
+            <span class="fs-4 fw-bold">{{ listingInfo.highest_current_bid ? "Highest Bid: $" +
+              listingInfo.highest_current_bid :
+              "Starting Bid: $"
+              +
+              listingInfo.starting_bid }}</span>
+            <span v-if="listingInfo.highest_current_bidder_userid && listingInfo.highest_current_bidder_userid == user.uid"
+              class="badge bg-black ms-3 my-auto">You're
+              the
+              highest bidder!</span>
+          </div>
           <p class="fw-medium fs-5 mb-0">
             <i class="bi bi-clock"></i> Time Left: {{ timeLeft(listingInfo.auction_end_datetime) }} ({{
               timeConverter(listingInfo.auction_end_datetime) }})
