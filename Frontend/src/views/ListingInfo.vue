@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="row justify-content-end"
-        v-else-if="user.uid == listingInfo.userid && listingInfo.status == 'closed' && listingInfo.can_reopen && listingInfo.highest_current_bid">
+        v-else-if="user.uid == listingInfo.userid && listingInfo.status == 'closed' && listingInfo.can_reopen">
         <div class="col-lg-6 col-md-8 col-sm-8 col-8">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">New Bidding End Date</span>
