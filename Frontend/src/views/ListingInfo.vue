@@ -20,7 +20,7 @@
               timeConverter(listingInfo.auction_end_datetime) }})
           </p>
         </div>
-        <div v-if="user.uid == listingInfo.userid" class="col text-end"><button class="btn btn-outline-dark"><i
+        <div v-if="user.uid == listingInfo.userid" class="col text-end pe-0"><button class="btn btn-outline-dark"><i
               class="bi bi-trash3-fill"></i> Delete</button>
         </div>
       </div>
