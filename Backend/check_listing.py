@@ -12,7 +12,7 @@ CORS(app)
 listing_URL = "http://listing:5007/listing"
 user_URL = "http://user:5005/user"
 
-@app.route('/checklisting/<string:listingid>')
+@app.route('/checklisting/<string:listingid>', methods=['POST'])
 def check_listing(listingid):
     
     # when triggered invoke get request to retrive the listing record
