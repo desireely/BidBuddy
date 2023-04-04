@@ -215,7 +215,7 @@ def add_listing():
         listing = {
             u"datetime_created": int(str(time.time()).split(".")[0]),
             # u"auction_end_datetime": datetime.datetime.fromisoformat(data["auction_end_datetime"]).timestamp(),
-            u"auction_end_datetime":  int(datetime.datetime.strptime(data["auction_end_datetime"], "%Y-%m-%dT%H:%M").timestamp()),
+            u"auction_end_datetime":  int(datetime.datetime.strptime(data["auction_end_datetime"], "%Y-%m-%dT%H:%M").timestamp()) - (8 * 60 * 60),
             u"highest_current_bid": None,
             u"highest_current_bidder_userid": None,
             u"listing_description": data["listing_description"],
