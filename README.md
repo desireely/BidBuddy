@@ -27,6 +27,18 @@ npm install
 npm run dev
 ```
 
+### Build Vite Project
+
+```sh
+npm run build
+```
+
+### Preview Vite Project
+
+```sh
+npm run preview
+```
+
 # Backend
 
 ### Build and Start All Docker Containers
