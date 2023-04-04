@@ -30,8 +30,12 @@ npm run dev
 
 ### Build and Start All Docker Containers
 
+```sh
 docker-compose up -d
+```
 
 ### Stop All Docker Containers
 
+```sh
 docker-compose down
+```
