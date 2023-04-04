@@ -27,19 +27,19 @@
                 Home
               </router-link>
             </li>
-            <li>
+            <li class="nav-item">
               <router-link to="/mylistings" class="nav-link text-dark" active-class="bg-dark text-white">
                 <i class="bi bi-bag me-2" width="16" height="16"></i>
                 My Listings
               </router-link>
             </li>
-            <li>
+            <li class="nav-item">
               <router-link to="/mybids" class="nav-link text-dark" active-class="bg-dark text-white">
                 <i class="bi bi-coin me-2" width="16" height="16"></i>
                 My Bids
               </router-link>
             </li>
-            <li>
+            <li class="nav-item pb-2" style="position:fixed; bottom:0;">
               <button class="nav-link text-dark" active-class="bg-dark text-white" @click="logout">
                 <i class="bi bi-box-arrow-right me-2" width="16" height="16"></i>
                 Log Out
@@ -77,7 +77,7 @@
                   My Bids
                 </router-link>
               </li>
-              <li class="nav-item" style="position:fixed; bottom:0;">
+              <li class="nav-item pb-2" style="position:fixed; bottom:0;">
                 <button class="nav-link text-dark" active-class="bg-dark text-white" @click="logout">
                   <i class="bi bi-box-arrow-right me-2" width="16" height="16"></i>
                   Log Out
