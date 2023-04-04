@@ -24,7 +24,7 @@
       </div>
 
       <br />
-      <div class="row" v-if="user.uid != listingInfo.userid">
+      <div class="row" v-if="user.uid != listingInfo.userid && listingInfo.status == 'open'">
         <div class="col"></div>
 
         <div class="col-5 col-md-3">
@@ -252,6 +252,7 @@ export default {
       const currentTimestamp = Math.floor(Date.now() / 1000);
       const timeDiff = unixTimestamp - currentTimestamp;
       if (timeDiff <= 0) {
+        this.listingInfo.status = "closed";
         return "Ended";
       } else {
         const daysLeft = Math.floor(timeDiff / (24 * 3600));
