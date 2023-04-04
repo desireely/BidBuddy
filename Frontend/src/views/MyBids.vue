@@ -2,14 +2,14 @@
   <div>
     <h1>My Bids</h1>
     <div class="row d-flex mx-2" v-if="filteredListings && filteredListings.length > 0">
-      <ItemCard v-for="listing in this.filteredListings" :listingData="listing" />
+      <ItemCard v-for="listing in this.filteredListings" :listingData="listing" :uid="user_id"/>
     </div>
     <div class="container-fluid d-flex justify-content-center align-items-center"
       style="height: calc(100vh - 200px); overflow: hidden;" v-else-if="searchInput || (!listings || listings.length == 0)">
       <p class="fs-5" style="color: #C6C6C6">You currently have no bids.</p>
     </div>
     <div class="row d-flex mx-2" v-else>
-      <ItemCard v-for="listing in this.listings" :listingData="listing" />
+      <ItemCard v-for="listing in this.listings" :listingData="listing" :uid="user_id"/>
     </div>
   </div>
 </template>
@@ -22,6 +22,7 @@ export default {
   components: { ItemCard },
   props: {
     user: Object,
+    uid: String,
     token: String,
     searchInput: String,
   },
@@ -29,6 +30,7 @@ export default {
     return {
       listings: [],
       filteredListings: [],
+      user_id: this.user.uid,
     }
   },
   watch: {

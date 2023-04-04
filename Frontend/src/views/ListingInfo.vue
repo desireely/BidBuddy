@@ -1,14 +1,24 @@
 <template>
   <div>
     <h1>{{ listingInfo.listing_name }}</h1>
+    <span class="badge bg-black mb-2"
+      v-if="listingInfo.highest_current_bidder_userid && listingInfo.highest_current_bidder_userid == user.uid">You're the
+      highest bidder!</span>
     <h5 class="" style="color: #C6C6C6">Listed by: {{ sellerName }}</h5>
     <p class="mb-1" style="color: #C6C6C6">Posted on: {{ timeConverter(listingInfo.datetime_created) }}</p>
     <div class="container p-3">
       <div class="row">
-        <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $" +
-          listingInfo.starting_bid }}</h4>
-        <p class="fw-medium fs-5 mb-0">Auction Ends on {{
-          timeConverter(listingInfo.auction_end_datetime) }}</p>
+        <div class="col">
+          <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $"
+            +
+            listingInfo.starting_bid }}</h4>
+          <p class="fw-medium fs-5 mb-0">
+            <i class="bi bi-clock"></i> Time Left: {{ timeLeft(listingInfo.auction_end_datetime) }} ({{
+              timeConverter(listingInfo.auction_end_datetime) }})
+          </p>
+        </div>
+        <div class="col text-end"><button class="btn btn-outline-dark"><i class="bi bi-trash3-fill"></i> Delete</button>
+        </div>
       </div>
       <div class="row mt-2">
         <div class="col-5">
@@ -22,10 +32,10 @@
       </div>
 
       <br />
-      <div class="row" v-if="user.uid != listingInfo.userid">
+      <div class="row" v-if="user.uid != listingInfo.userid && listingInfo.status == 'open'">
         <div class="col"></div>
 
-        <div class="col-3">
+        <div class="col-5 col-md-3">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">$</span>
             <input type="text" :class="{ 'form-control': true, 'me-2': true, 'is-invalid': !bidPriceIsValid }"
@@ -37,22 +47,18 @@
         </div>
 
         <div class="col-auto">
-          <button @click="placeBid" class="btn btn-outline-dark">Place Bid</button>
+          <button @click="placeBid" class="btn btn-dark">Place Bid</button>
         </div>
       </div>
-      <div class="row"
-        v-else-if="listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo)">
-        <div class="col"></div>
-        <div class="col-2"></div>
-
+      <div class="row justify-content-end"
+        v-else-if="user.uid == listingInfo.userid && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo) && listingInfo.highest_current_bid">
         <div class="col-auto">
           <button @click="displayQRCode" class="btn btn-outline-dark">Confirm Transaction</button>
         </div>
       </div>
-      <div class="row" v-else-if="listingInfo.status == 'closed' && listingInfo.can_reopen">
-        <div class="col"></div>
-
-        <div class="col-5">
+      <div class="row justify-content-end"
+        v-else-if="user.uid == listingInfo.userid && listingInfo.status == 'closed' && listingInfo.can_reopen && listingInfo.highest_current_bid">
+        <div class="col-lg-6 col-md-8 col-sm-8 col-8">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">New Bidding End Date</span>
             <input type="datetime-local" :class="{ 'form-control': true, 'is-invalid': !endDateIsValid }"
@@ -64,13 +70,13 @@
         </div>
 
         <div class="col-auto">
-          <button @click="validateEndDate()" class="btn btn-outline-dark">Reopen Listing</button>
+          <button @click="validateEndDate()" class="btn btn-dark">Reopen Listing</button>
         </div>
       </div>
     </div>
 
     <div
-      v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open'">
+      v-if="user.uid == listingInfo.userid && encoded_string && listingInfo.status == 'closed' && listingInfo.transaction_status == 'open' && !('can_reopen' in listingInfo) && listingInfo.highest_current_bid">
       <h4>Scan the QR Code to confirm transaction:</h4>
       <div class="row">
         <div class="col">
@@ -134,6 +140,11 @@ export default {
 
       myBids: true,
     };
+  },
+  mounted() {
+    setInterval(() => {
+      this.$forceUpdate();
+    }, 1000);
   },
   methods: {
     validateEndDate() {
@@ -229,9 +240,9 @@ export default {
     },
     timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
-      var year = a.getFullYear();
-      var month = ("0" + (a.getMonth() + 1)).slice(-2);
-      var date = ("0" + a.getDate()).slice(-2);
+      var year = a.getFullYear().toString().substr(-2);
+      var month = (a.getMonth() + 1).toString();
+      var date = a.getDate().toString();
       var hour = a.getHours();
       var time = "";
       if (hour >= 12) {
@@ -246,6 +257,28 @@ export default {
       var formattedDate = date + '/' + month + '/' + year + ' ' + hour + ":" + min + time;
       return formattedDate;
     },
+    timeLeft(unixTimestamp) {
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      const timeDiff = unixTimestamp - currentTimestamp;
+      if (timeDiff <= 0) {
+        this.listingInfo.status = "closed";
+        return "Ended";
+      } else {
+        const daysLeft = Math.floor(timeDiff / (24 * 3600));
+        let timeRemaining = timeDiff % (24 * 3600);
+        const hoursLeft = Math.floor(timeRemaining / 3600);
+        timeRemaining %= 3600;
+        const minutesLeft = Math.floor(timeRemaining / 60);
+        const secondsLeft = timeRemaining % 60;
+        const timeArr = [`${daysLeft}d`, `${hoursLeft}h`, `${minutesLeft}m`, `${secondsLeft}s`];
+
+        var result = timeArr
+        while (result && Number(result[0].slice(0, -1)) == 0) {
+          result.shift();
+        }
+        return result.slice(0, 2).join(" ") + " left";
+      }
+    },
     placeBid() {
       if (!this.bidPrice) {
         this.bidErrMsg = "Please enter a bid price.";
@@ -255,6 +288,9 @@ export default {
         this.bidPriceIsValid = false;
       } else if (this.bidPrice <= this.listingInfo.highest_current_bid) {
         this.bidErrMsg = `Bid price must be higher than $${this.listingInfo.highest_current_bid}.`;
+        this.bidPriceIsValid = false;
+      } else if (this.bidPrice < this.listingInfo.starting_bid) {
+        this.bidErrMsg = `Bid price must be at least $${this.listingInfo.starting_bid}.`;
         this.bidPriceIsValid = false;
       } else {
         this.bidErrMsg = null;
@@ -272,6 +308,9 @@ export default {
             this.myBids = true;
             this.bidStatus = "Bid placed!";
             this.bidCreation = `You have placed a bid of $${this.bidPrice} for ${this.listingInfo.listing_name}!`
+
+            this.listingInfo.highest_current_bid = this.bidPrice;
+            this.listingInfo.highest_current_bidder_userid = this.user.uid;
 
             this.bidPrice = null;
             var myModal = new bootstrap.Modal(this.$refs.successModal)

@@ -4,10 +4,15 @@ import App from "./App.vue";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import router from "./router";
 import "@lottiefiles/lottie-player";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const app = createApp(App);
 app.use(router);
 app.mount("#app");
+library.add(fas);
+app.component("font-awesome-icon", FontAwesomeIcon);
 
 // Global Variables
 app.config.globalProperties.$listing = "http://127.0.0.1:5007/listing";
