@@ -70,7 +70,7 @@
         </div>
 
         <div class="col-auto">
-          <button @click="validateEndDate()" class="btn btn-outline-dark">Reopen Listing</button>
+          <button @click="validateEndDate()" class="btn btn-dark">Reopen Listing</button>
         </div>
       </div>
     </div>
