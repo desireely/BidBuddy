@@ -6,11 +6,13 @@
     <div class="container p-3">
       <div class="row">
         <div class="col">
-          <h4>{{ listingInfo.highest_current_bid ? "Highest Bid: $" + listingInfo.highest_current_bid : "Starting Bid: $"
+          <span class="fs-4 fw-bold">{{ listingInfo.highest_current_bid ? "Highest Bid: $" +
+            listingInfo.highest_current_bid :
+            "Starting Bid: $"
             +
-            listingInfo.starting_bid }}</h4>
-          <span class="badge bg-black mb-2"
-            v-if="listingInfo.highest_current_bidder_userid && listingInfo.highest_current_bidder_userid == user.uid">You're
+            listingInfo.starting_bid }}</span>
+          <span v-if="listingInfo.highest_current_bidder_userid && listingInfo.highest_current_bidder_userid == user.uid"
+            class="badge bg-black ms-3">You're
             the
             highest bidder!</span>
           <p class="fw-medium fs-5 mb-0">
@@ -24,7 +26,7 @@
       </div>
       <div class="row mt-2">
         <div class="col-5">
-          <img :src="listingInfo.listing_image_url" style='height: 100%; width: 100%; object-fit: contain'>
+          <img :src="listingInfo.listing_image_url" style='height: 100%; width: 100%; object-fit:contain'>
         </div>
         <div class="col-7 border border-dark-subtle rounded p-3">
           <h5>Product Description</h5>
