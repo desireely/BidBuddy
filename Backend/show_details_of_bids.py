@@ -83,7 +83,8 @@ def processUserListing(buyerid):
                 "highest_current_bid" : listing_result['data']['highest_current_bid'],
                 "starting_bid" : listing_result['data']['starting_bid'],
                 "listingid" : listing_result['data']['listingid'],
-                "listing_image_url" : listing_result['data']['listing_image_url']
+                "listing_image_url" : listing_result['data']['listing_image_url'],
+                "highest_current_bidder_userid" : listing_result['data']['highest_current_bidder_userid']
             }
             open_list.append(req_obj)
 
