@@ -17,6 +17,7 @@ BidBuddy is a marketplace where buyers and sellers can buy and sell items with a
 
 ```sh
 cd BidBuddy
+cd Frontend
 npm install
 ```
 
