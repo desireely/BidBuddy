@@ -17,7 +17,7 @@
               timeConverter(listingInfo.auction_end_datetime) }})
           </p>
         </div>
-        <div v-if="user.uid == listingInfo.userid" class="col text-end"><button class="btn btn-outline-dark"><i
+        <div v-if="user.uid == listingInfo.userid" class="col text-end"><button @click="deleteListing" class="btn btn-outline-dark"><i
               class="bi bi-trash3-fill"></i> Delete</button>
         </div>
       </div>
@@ -334,6 +334,30 @@ export default {
           });
       }
     },
+    deleteListing() {
+      axios.delete(`${this.$deletelisting}/${this.$route.query.listingID}`)
+        .then((res) => {
+          console.log(res.data);
+          this.myBids = false;
+          this.bidStatus = "Listing Deleted!";
+          this.bidCreation = `You have deleted ${this.listingInfo.listing_name}!`
+
+          this.endDate = null;
+          this.endDateErrMsg = null;
+          var myModal = new bootstrap.Modal(this.$refs.successModal)
+          var modalToggle = this.$refs.successModal;
+          myModal.show(modalToggle);
+        })
+        .catch((error) => {
+          console.error(error);
+          this.bidStatus = "Listing was not deleted!";
+          this.bidCreation = "There was an error deleting your listing."
+
+          var myModal = new bootstrap.Modal(this.$refs.successModal)
+          var modalToggle = this.$refs.successModal;
+          myModal.show(modalToggle);
+        });
+    }
   },
   created() {
     this.getListingInfo();

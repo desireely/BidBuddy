@@ -29,3 +29,5 @@ app.config.globalProperties.$confirmTransaction =
   "http://127.0.0.1:5008/confirmtransaction";
 app.config.globalProperties.$reopenlisting =
   "http://127.0.0.1:5010/reopenlisting";
+app.config.globalProperties.$deletelisting =
+  "http://127.0.0.1:5025/deletelisting";
