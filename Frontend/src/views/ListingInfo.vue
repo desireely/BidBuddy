@@ -22,7 +22,7 @@
               timeConverter(listingInfo.auction_end_datetime) }})
           </p>
         </div>
-        <div v-if="user.uid == listingInfo.userid" class="col text-end pe-0"><button class="btn btn-outline-dark"><i
+        <div v-if="user.uid == listingInfo.userid" class="col-auto text-end pe-0"><button class="btn btn-outline-dark" @click="deleteConfirm"><i
               class="bi bi-trash3-fill"></i> Delete</button>
         </div>
       </div>
@@ -101,7 +101,7 @@
           <div class="modal-body">
             {{ bidCreation }}
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer" v-if="!isDelete">
             <router-link to="/mybids" v-if="myBids">
               <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">My Bids</button>
             </router-link>
@@ -109,6 +109,10 @@
               <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">My Listings</button>
             </router-link>
             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+          </div>
+          <div class="modal-footer" v-else>
+            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal" @click="deleteListing">Delete</button>
           </div>
         </div>
       </div>
@@ -128,6 +132,8 @@ export default {
   },
   data() {
     return {
+      isDelete: false,
+
       bidStatus: null,
       bidCreation: null,
 
@@ -153,6 +159,16 @@ export default {
     }, 1000);
   },
   methods: {
+    deleteConfirm() {
+      this.myBids = false;
+      this.isDelete = true;
+      this.bidStatus = "Delete this listing?";
+      this.bidCreation = `Are you sure you want to delete ${this.listingInfo.listing_name}?`
+
+      var myModal = new bootstrap.Modal(this.$refs.successModal)
+      var modalToggle = this.$refs.successModal;
+      myModal.show(modalToggle);
+    },
     validateEndDate() {
       if (!this.endDate) {
         this.endDateErrMsg = "Field is required.";
@@ -171,6 +187,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.myBids = false;
+          this.isDelete = false;
           this.bidStatus = "Listing Reopened!";
           this.bidCreation = `You have reopened ${this.listingInfo.listing_name}!`
 
@@ -211,6 +228,7 @@ export default {
                 this.listingInfo.transaction_status = "closed";
 
                 this.myBids = false;
+                this.isDelete = false;
                 this.bidStatus = "Transaction Confirmed!";
                 this.bidCreation = `You have confirmed the transaction for ${this.listingInfo.listing_name}!`
 
@@ -312,6 +330,7 @@ export default {
           .then((res) => {
             console.log(res.data.data);
             this.myBids = true;
+            this.isDelete = false;
             this.bidStatus = "Bid placed!";
             this.bidCreation = `You have placed a bid of $${this.bidPrice} for ${this.listingInfo.listing_name}!`
 
@@ -344,6 +363,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.myBids = false;
+          this.isDelete = false;
           this.bidStatus = "Listing Deleted!";
           this.bidCreation = `You have deleted ${this.listingInfo.listing_name}!`
 
@@ -355,6 +375,8 @@ export default {
         })
         .catch((error) => {
           console.error(error);
+          this.myBids = false;
+          this.isDelete = false;
           this.bidStatus = "Listing was not deleted!";
           this.bidCreation = "There was an error deleting your listing."
 
