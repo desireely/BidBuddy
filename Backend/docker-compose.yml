@@ -131,6 +131,7 @@ services:
       - user
       - listing
       - rabbitmq
+      - notification
     environment:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
@@ -149,6 +150,7 @@ services:
     restart: always
     depends_on:
       - rabbitmq
+      - notification
       - user
       - listing
       - bid
@@ -224,6 +226,7 @@ services:
       - user
       - listing
       - rabbitmq
+      - notification
       - qrcode
     environment:
       RABBITMQ_HOST: rabbitmq
@@ -245,6 +248,7 @@ services:
       - user
       - listing
       - rabbitmq
+      - notification
     environment:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
@@ -267,12 +271,75 @@ services:
       - listing
       - createlisting
       - rabbitmq
+      - notification
     environment:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       PYTHONUNBUFFERED: 1
     ports:
       - "5010:5010"
+
+  #################################################
+  # DeleteListing: The DeleteListing microservice
+  #################################################
+
+  deletelisting:
+    build: 
+      context: ./
+      dockerfile: deletelisting.Dockerfile
+    image: bidbud/deletelisting:esd
+    restart: always
+    depends_on:
+      - user
+      - bid
+      - listing
+      - rabbitmq
+      - notification
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5025:5025"
+
+  #################################################
+  # Notification: The Notification microservice
+  #################################################
+
+  notification:
+    build: 
+      context: ./
+      dockerfile: notification.Dockerfile
+    image: bidbud/notification:esd
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      PYTHONUNBUFFERED: 1
+
+  #################################################
+  # Telegram: The Telegram microservice
+  #################################################
+
+  telegram:
+    build: 
+      context: ./
+      dockerfile: telegram.Dockerfile
+    image: bidbud/telegram:esd
+    restart: always
+    depends_on:
+      - user
+      - bid
+      - listing
+      - bidforlisting
+      - showdetailsofbids
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      PYTHONUNBUFFERED: 1
 
   # #######################################
   # # Postgres: The database used by Kong

@@ -40,70 +40,70 @@ def home():
 # IMAGE
 #####################################
 
-# @app.route("/uploadimage", methods=['GET', 'POST'])
-# def upload_image():
+@app.route("/uploadimage", methods=['GET', 'POST'])
+def upload_image():
 
-#     # Parse the image from the request
-#     image = request.files['image']
+    # Parse the image from the request
+    image = request.files['image']
 
-#     # Process the image as desired
-#     storage_bucket_name = 'esd-project-listing.appspot.com'
-#     bucket = storage.bucket(storage_bucket_name)
+    # Process the image as desired
+    storage_bucket_name = 'esd-project-listing.appspot.com'
+    bucket = storage.bucket(storage_bucket_name)
 
-#     file_name_to_store_as = str(uuid.uuid4()) + '-' + image.filename
-#     blob = bucket.blob(file_name_to_store_as)
-#     blob.upload_from_string(image.read(), content_type=image.content_type)
+    file_name_to_store_as = str(uuid.uuid4()) + '-' + image.filename
+    blob = bucket.blob(file_name_to_store_as)
+    blob.upload_from_string(image.read(), content_type=image.content_type)
 
-#     # download image from firebase storage
-#     storage.bucket(storage_bucket_name).blob(file_name_to_store_as).download_to_filename('downloaded4.jpg')
+    # download image from firebase storage
+    storage.bucket(storage_bucket_name).blob(file_name_to_store_as).download_to_filename('downloaded4.jpg')
 
-#     return 'Image uploaded and downloaded successfully!'
+    return 'Image uploaded and downloaded successfully!'
 
 
 # download image
-# @app.route("/retrieveimage", methods=['GET'])
-# def retrieve_image():
+@app.route("/retrieveimage", methods=['GET'])
+def retrieve_image():
 
-#     storage_bucket_name = 'esd-project-listing.appspot.com'
-#     filename = 'downloaded.jpg'
-#     filename_to_save_as = 'downloaded5.jpg'
+    storage_bucket_name = 'esd-project-listing.appspot.com'
+    filename = 'downloaded.jpg'
+    filename_to_save_as = 'downloaded5.jpg'
 
-#     bucket = storage.bucket(storage_bucket_name)
-#     bucket.blob(filename).download_to_filename(filename_to_save_as)
+    bucket = storage.bucket(storage_bucket_name)
+    bucket.blob(filename).download_to_filename(filename_to_save_as)
 
-#     return "<h1>Download successful</h1>"
+    return "<h1>Download successful</h1>"
 
 
 # get image url
-# @app.route("/getimageurl")
-# def get_image_url():
+@app.route("/getimageurl")
+def get_image_url():
 
-#     # image_url = storage.bucket('esd-project-listing.appspot.com').blob('images/example.jpg').path
+    # image_url = storage.bucket('esd-project-listing.appspot.com').blob('images/example.jpg').path
 
-#     storage_bucket_name = 'esd-project-listing.appspot.com'
-#     image_filename_to_get = 'images/example.jpg'
+    storage_bucket_name = 'esd-project-listing.appspot.com'
+    image_filename_to_get = 'images/example.jpg'
 
-#     bucket = storage.bucket(storage_bucket_name)
-#     public_image_url = bucket.blob(image_filename_to_get).public_url
+    bucket = storage.bucket(storage_bucket_name)
+    public_image_url = bucket.blob(image_filename_to_get).public_url
 
-#     print(public_image_url)
+    print(public_image_url)
 
-#     return "<h1>Gotten image url successfully</h1>"
+    return "<h1>Gotten image url successfully</h1>"
 
 
 # delete image
-# @app.route("/deleteimage")
-# def delete_image():
+@app.route("/deleteimage")
+def delete_image():
 
-#     storage_bucket_name = 'esd-project-listing.appspot.com'
-#     image_filename_to_get = 'images/example.jpg'
+    storage_bucket_name = 'esd-project-listing.appspot.com'
+    image_filename_to_get = 'images/example.jpg'
 
-#     bucket = storage.bucket(storage_bucket_name)
-#     image_blob = bucket.blob(image_filename_to_get)
+    bucket = storage.bucket(storage_bucket_name)
+    image_blob = bucket.blob(image_filename_to_get)
     
-#     image_blob.delete()
+    image_blob.delete()
 
-#     return "<h1>Deleted image successfully from firebase storage</h1>"
+    return "<h1>Deleted image successfully from firebase storage</h1>"
 
 
 
@@ -117,8 +117,7 @@ def get_all_listings():
     listings_collection_ref = db.collection(u'listings')
 
     try:
-        # listing_doc_ref = listings_collection_ref.stream()
-        listing_doc_ref = listings_collection_ref.get()
+        listing_doc_ref = listings_collection_ref.stream()
         # listings = [listing.to_dict() for listing in listing_doc_ref]
         listings = []
 
@@ -209,8 +208,15 @@ def add_listing():
         blob.make_public()
         image_url = blob.public_url
         print(f"image_url: {image_url}")
+        data['listing_image_url'] = image_url
     else:
         image_url = data["listing_image_url"]
+
+    # print("------------------------------")
+    # print(data["auction_end_datetime"])
+    # print(int(datetime.datetime.strptime(data["auction_end_datetime"], "%Y-%m-%dT%H:%M").timestamp()))
+    # print(int(datetime.datetime.strptime(data["auction_end_datetime"], "%Y-%m-%dT%H:%M").timestamp()) - (8 * 60 * 60))
+    # print(datetime.datetime.fromisoformat(data["auction_end_datetime"]).timestamp())
 
     try:
         listing = {
@@ -330,8 +336,7 @@ def get_listings_according_userid(userid):
     query_listings_according_userid_ref = listing_collection_ref.where(u'userid', u'==', userid)
 
     try:
-        # listings_according_userid = query_listings_according_userid_ref.stream()
-        listings_according_userid = query_listings_according_userid_ref.get()
+        listings_according_userid = query_listings_according_userid_ref.stream()
 
         # listings = [listing.to_dict() for listing in listings_according_userid]
 

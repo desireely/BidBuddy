@@ -46,6 +46,10 @@ def processUserBid(bid_details):
     highest_result = invoke_http(listing_URL+'/'+listing_id, method='GET')
     listing_name = highest_result['data']['listing_name']
 
+    
+    prev_highest_bidder_bid = highest_result['data']['highest_current_bid']
+    listing_image_url = highest_result['data']['listing_image_url']
+
     # Add high_bid_price into bid_details
     bid_details['highest_current_bid'] = highest_result['data']['highest_current_bid']
     bid_details['starting_bid'] = highest_result['data']['starting_bid']
@@ -84,34 +88,109 @@ def processUserBid(bid_details):
     # Send notification for successful bidding
     print('\n-----Invoking user microservice-----')
     user_result = invoke_http(user_URL+'/'+bid_details['highest_current_bidder_userid'], method='GET')
+    username = user_result['data']['username']
     email = user_result['data']['email']
+    bid_price = bid_details['bid_price']
+    print(bid_price)
+
     teleid = user_result['data']['teleuser']
 
     # Preparing message to send via AMQP for email
     message_email = json.dumps(
         {
             "user_emails": [email],
-            "subject": f"{listing_name} Posted Successfully!",
-            "html_body": "<strong>Hello, this is a test email.</strong>"
+            "subject": f"Successful bid!",
+            "html_body": f"""
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Bid Successfully Posted</title>
+    <style>
+      body {{
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+      }}
+      .container {{
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }}
+      .title {{
+        text-align: center;
+        margin-bottom: 20px;
+      }}
+      .title strong {{
+        font-size: 36px;
+        font-weight: bold;
+        margin: 0;
+        color: #333;
+        display: block;
+      }}
+      .description {{
+        font-size: 20px;
+        color: #666;
+        margin-bottom: 40px;
+        text-align: center;
+      }}
+      .listing-details {{
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }}
+      .listing-details h2 {{
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #333;
+      }}
+      .listing-details p {{
+        font-size: 16px;
+        color: #666;
+        margin-top: 0;
+      }}
+      .listing-image {{
+        max-width: 500px;
+        margin: 0 auto;
+        display: block;
+      }}
+      .image-wrapper {{
+        text-align: center;
+      }}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">
+        <strong>Hi {username}! Your recent bid for {listing_name} is successful!</strong>
+      </div>
+      <div class="image-wrapper">
+        <img class="listing-image" src="{listing_image_url}" alt="Listing Image">
+      </div>
+      <div class="listing-details">
+        <h2>{listing_name}</h2>
+        <p><strong>Your Bid:</strong> {bid_price}</p>
+      </div>
+      <div class="description">
+        <p>You are currently the highest bidder for this listing.</p>
+      </div>
+    </div>
+  </body>
+</html>
+
+"""
         }
     )
 
     print(message_email)
 
-    # Preparing message to send via AMQP for tele
-    # message_tele = json.dumps(
-    #     {
-    #         "user_teles": [teleid],
-    #         "subject": f"{listing_name} Posted Successfully!",
-    #         "body": "Hello, this is a test email."
-    #     }
-    # )
-
-    # print(message_tele)
-
 
     # AMQP part
-
+    amqp_setup.check_setup()
     print('\n\n-----Publishing message-----')        
     amqp_setup.channel.basic_publish(
         exchange=amqp_setup.exchangename, 
@@ -120,13 +199,6 @@ def processUserBid(bid_details):
         properties=pika.BasicProperties(delivery_mode=2)
         )
     
-    # print('\n\n-----Publishing tele-----')        
-    # amqp_setup.channel.basic_publish(
-    #     exchange=amqp_setup.exchangename, 
-    #     routing_key="sendtele", 
-    #     body=message_tele, 
-    #     properties=pika.BasicProperties(delivery_mode=2)
-    #     )
     
     #AMQP
     # Inform previous bidder of outbid status
@@ -136,6 +208,7 @@ def processUserBid(bid_details):
     
         print('\n-----Invoking user microservice-----')
         user_result = invoke_http(user_URL+'/'+prev_high_id, method='GET')
+        prev_highest_bidder_name = user_result['data']['username']
         email = user_result['data']['email']
         teleid = user_result['data']['teleuser']
 
@@ -143,26 +216,103 @@ def processUserBid(bid_details):
         message_email = json.dumps(
             {
                 "user_emails": [email],
-                "subject": f"{listing_name} Posted Successfully!",
-                "html_body": "<strong>Hello, this is a test email.</strong>"
+                "subject": "You have been outbidded!",
+                "html_body":f"""
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Outbid Notification</title>
+    <style>
+      body {{
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+      }}
+      .container {{
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }}
+      .title {{
+        text-align: center;
+        margin-bottom: 20px;
+      }}
+      .title h1 {{
+        font-size: 36px;
+        font-weight: bold;
+        margin: 0;
+        color: #333;
+      }}
+      .description {{
+        font-size: 20px;
+        color: #666;
+        margin-bottom: 40px;
+        text-align: center;
+      }}
+      .listing-details {{
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }}
+      .listing-details h2 {{
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #333;
+      }}
+      .listing-details p {{
+        font-size: 16px;
+        color: #666;
+        margin-top: 0;
+      }}
+      .listing-image {{
+        max-width: 500px;
+        margin: 0 auto;
+        display: block;
+      }}
+      .listing-image {{
+        max-width: 500px;
+        margin: 0 auto;
+        display: block;
+      }}
+      .image-wrapper {{
+        text-align: center;
+      }}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">
+        <h1>Outbid Notification</h1>
+      </div>
+      <div class="description">
+        <p>Hi {prev_highest_bidder_name}, your bid for {listing_name} has been outbid!</p>
+      </div>
+      <div class="image-wrapper">
+        <img class="listing-image" src="{listing_image_url}" alt="Listing Image">
+      </div>
+      <div class="listing-details">
+        <h2>{listing_name}</h2>
+        <p><strong>Your Bid:</strong> {prev_highest_bidder_bid}</p>
+        <p><strong>Current Highest Bid:</strong> {bid_price}</p>
+      </div>
+    </div>
+  </body>
+</html>
+
+"""
             }
         )
 
         print(message_email)
 
-        # Preparing message to send via AMQP for tele
-        # message_tele = json.dumps(
-        #     {
-        #         "user_teles": [teleid],
-        #         "subject": f"{listing_name} Posted Successfully!",
-        #         "body": "Hello, this is a test email."
-        #     }
-        # )
-
-        # print(message_tele)
-
 
         # AMQP part
+        amqp_setup.check_setup()
         print('\n\n-----Publishing message-----')        
         amqp_setup.channel.basic_publish(
             exchange=amqp_setup.exchangename, 
@@ -170,15 +320,6 @@ def processUserBid(bid_details):
             body=message_email, 
             properties=pika.BasicProperties(delivery_mode=2)
             )
-        
-        # print('\n\n-----Publishing tele-----')        
-        # amqp_setup.channel.basic_publish(
-        #     exchange=amqp_setup.exchangename, 
-        #     routing_key="sendtele", 
-        #     body=message_tele, 
-        #     properties=pika.BasicProperties(delivery_mode=2)
-        #     )
-
     
 
     return bid_result

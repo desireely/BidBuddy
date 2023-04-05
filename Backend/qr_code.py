@@ -42,7 +42,6 @@ def generate_qrcode():
             encrypted_data = cipher.encrypt(params.encode())
             encoded_data = urllib.parse.quote_plus(encrypted_data.decode())
 
-            # base_url = 'http://127.0.0.1:5173/confirmtransaction'
             base_url = 'http://localhost:5173/confirmtransaction'
             listing_id = transactionInfo["listing_id"]
 

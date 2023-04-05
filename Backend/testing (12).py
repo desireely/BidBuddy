@@ -173,8 +173,8 @@ def processTrackAuction(listing_id):
       print(message_email)
 
       # # AMQP part
-      print('\n\n-----Publishing message-----')  
-      amqp_setup.check_setup()      
+      print('\n\n-----Publishing message-----')       
+      amqp_setup.check_setup() 
       amqp_setup.channel.basic_publish(
           exchange=amqp_setup.exchangename, 
           routing_key="send.email", 
@@ -321,8 +321,8 @@ def processTrackAuction(listing_id):
       print(message_email)
 
       # # AMQP part
-      print('\n\n-----Publishing message-----')
-      amqp_setup.check_setup()  
+      print('\n\n-----Publishing message-----') 
+      amqp_setup.check_setup()       
       amqp_setup.channel.basic_publish(
           exchange=amqp_setup.exchangename, 
           routing_key="send.email", 
@@ -429,8 +429,8 @@ def processTrackAuction(listing_id):
       print(message_email)
 
       # # AMQP part
-      print('\n\n-----Publishing message-----')
-      amqp_setup.check_setup()  
+      print('\n\n-----Publishing message-----')   
+      amqp_setup.check_setup()     
       amqp_setup.channel.basic_publish(
           exchange=amqp_setup.exchangename, 
           routing_key="send.email", 
@@ -555,7 +555,7 @@ def processTrackAuction(listing_id):
       print(message_email)
 
       # # AMQP part
-      print('\n\n-----Publishing message-----')
+      print('\n\n-----Publishing message-----')        
       amqp_setup.check_setup()
       amqp_setup.channel.basic_publish(
           exchange=amqp_setup.exchangename, 

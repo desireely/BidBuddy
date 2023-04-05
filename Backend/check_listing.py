@@ -58,48 +58,136 @@ def process_listing_status(listingid):
         seller_id = listing_result['data']['userid']
         user_result = invoke_http(user_URL+'/'+seller_id, method='GET')
         email = user_result['data']['email']
+        username = user_result['data']['username']
         teleid = user_result['data']['teleuser']
         listing_name = update_result['data']['listing_name']
+        listing_description = update_result['data']['listing_description']
+        listing_image_url = update_result['data']['listing_image_url']
+        
 
         # Preparing message to send via AMQP for email
         message_email = json.dumps(
             {
                 "user_emails": [email],
                 "subject": f"{listing_name} Transaction Timeout",
-                "html_body": f"{listing_name} Transaction has timed out. If you would like to reopen your listing, please click on this link."
+                "html_body": f"""
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Closed Listing</title>
+    <style>
+      body {{
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+      }}
+      .container {{
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }}
+      .title {{
+        text-align: center;
+        margin-bottom: 20px;
+      }}
+      .title h1 {{
+        font-size: 36px;
+        font-weight: bold;
+        margin: 0;
+        color: #333;
+      }}
+      .description {{
+        font-size: 20px;
+        color: #666;
+        margin-bottom: 40px;
+        text-align: center;
+      }}
+      .listing-details {{
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }}
+      .listing-details h2 {{
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #333;
+      }}
+      .listing-details p {{
+        font-size: 16px;
+        color: #666;
+        margin-top: 0;
+      }}
+      .re-open-link {{
+        text-align: center;
+        margin-top: 40px;
+      }}
+      .re-open-link a {{
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #f44336;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+      }}
+      .re-open-link a:hover {{
+        background-color: #d32f2f;
+      }}
+      .listing-image {{
+        text-align: center;
+        margin-bottom: 20px;
+      }}
+      .listing-image img {{
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+      }}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">
+        <h1>Closed Listing</h1>
+      </div>
+      <div class="description">
+        <p>Hi {username}, due to inactivity, we have closed the following listing:</p>
+      </div>
+      <div class="listing-image">
+        <img src="{listing_image_url}" alt="Listing Image">
+      </div>
+      <div class="listing-details">
+        <h2>{listing_name}</h2>
+        <p><strong>Description:</strong> {listing_description}</p>
+      </div>
+      <div class="re-open-link">
+        <p>If you wish to reopen the listing, you can click on this <a href="http://127.0.0.1/reopenlisting/{listingid}">link</a></p>
+      </div>
+    </div>
+  </body>
+</html>
+
+"""
             }
         )
 
         print(message_email)
 
-        # Preparing message to send via AMQP for tele
-        # message_tele = json.dumps(
-        #     {
-        #         "user_teles": [teleid],
-        #         "subject": f"{listing_name} Posted Successfully!",
-        #         "body": "Hello, this is a test email."
-        #     }
-        # )
-
-        # print(message_tele)
-
 
         # AMQP part
-        # print('\n\n-----Publishing message-----')        
-        # amqp_setup.channel.basic_publish(
-        #     exchange=amqp_setup.exchangename, 
-        #     routing_key="send.email", 
-        #     body=message_email, 
-        #     properties=pika.BasicProperties(delivery_mode=2)
-        #     )
-        
-        # print('\n\n-----Publishing tele-----')        
-        # amqp_setup.channel.basic_publish(
-        #     exchange=amqp_setup.exchangename, 
-        #     routing_key="sendtele", 
-        #     body=message_tele, 
-        #     properties=pika.BasicProperties(delivery_mode=2)
-        #     )
+        amqp_setup.check_setup()
+        print('\n\n-----Publishing message-----')        
+        amqp_setup.channel.basic_publish(
+            exchange=amqp_setup.exchangename, 
+            routing_key="send.email", 
+            body=message_email, 
+            properties=pika.BasicProperties(delivery_mode=2)
+            )
 
         return update_result
     else:

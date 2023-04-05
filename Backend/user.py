@@ -43,6 +43,27 @@ def find_by_userid(userid):
     #         }
     #     ), 401
 
+#To get userid using teleuser
+@app.route("/user/tele/<string:teleuser>")
+def find_by_teleid(teleuser):
+    query = db.collection('users').where("teleuser", "==", teleuser).limit(1)
+    user = query.get()
+    print("user: ", user[0].to_dict())
+    if len(user):
+        return jsonify(
+            {
+                "code": 200,
+                "data": user[0].to_dict()
+            }
+        )   
+    return jsonify(
+        {
+            "code": 404,
+            "data" : '',
+            "message": "No matching tele id."
+        }
+        ), 404
+
 #To create a new user
 @app.route("/user", methods=['POST'])
 def create_user():

@@ -265,5 +265,29 @@ def get_all_bids():
 #         }
 #     ), 200
 
+@app.route("/bid/<string:listingid>", methods=['DELETE'])
+def delete_bids(listingid):
+    query = db.collection("bid").where("listing_id", "==", listingid)
+
+    bids = query.get()
+    
+    try:
+        for bid in bids:
+            bid.reference.delete()
+        return jsonify(
+            {
+                "code": 200,
+                "message": "Bid has been deleted successfully."
+            }
+        ), 200
+
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred while deleting the bid. " + str(e)
+            }
+        ), 500
+      
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5020, debug=True)

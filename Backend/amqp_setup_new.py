@@ -1,26 +1,22 @@
 import pika
-import time
 
 # These module-level variables are initialized whenever a new instance of python interpreter imports the module;
 # In each instance of python interpreter (i.e., a program run), the same module is only imported once (guaranteed by the interpreter).
 
-hostname = "rabbitmq" # default hostname
+hostname = "localhost" # default hostname
 port = 5672 # default port
 # connect to the broker and set up a communication channel in the connection
-username = 'guest'
-password = 'guest'
-
-connected = False
-while not connected:
-    try:
-        credentials = pika.PlainCredentials(username, password)
-        parameters = pika.ConnectionParameters(hostname, port, '/', credentials, heartbeat=3600, blocked_connection_timeout=3600)
-        connection = pika.BlockingConnection(parameters)
-        connected = True
-    except pika.exceptions.AMQPConnectionError as error:
-        print(f"Failed to connect to RabbitMQ: {error}")
-        time.sleep(5)
-
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(
+        host=hostname, port=port,
+        heartbeat=3600, blocked_connection_timeout=3600, # these parameters to prolong the expiration time (in seconds) of the connection
+))
+    # Note about AMQP connection: various network firewalls, filters, gateways (e.g., SMU VPN on wifi), may hinder the connections;
+    # If "pika.exceptions.AMQPConnectionError" happens, may try again after disconnecting the wifi and/or disabling firewalls.
+    # If see: Stream connection lost: ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)
+    # - Try: simply re-run the program or refresh the page.
+    # For rare cases, it's incompatibility between RabbitMQ and the machine running it,
+    # - Use the Docker version of RabbitMQ instead: https://www.rabbitmq.com/download.html
 channel = connection.channel()
 # Set up the exchange if the exchange doesn't exist
 # - use a 'topic' exchange to enable interaction
