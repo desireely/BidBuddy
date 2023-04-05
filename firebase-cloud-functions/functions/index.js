@@ -99,7 +99,7 @@ exports.firestoreCallbackCloseListing = functions.https.onRequest(async (req, re
     // console.log("Listing name is: ", listingName);
 
     // 172.20.10.4
-    axios.post("https://3733-111-65-58-112.ap.ngrok.io/trackauction", {
+    axios.post("https://ee42-119-234-8-177.ap.ngrok.io/trackauction", {
       "listing_id": listingid,
     })
         .then((response) => {
@@ -206,7 +206,7 @@ exports.firestoreCallbackInvokeTrackTransaction = functions.https.onRequest(asyn
 
   // await admin.firestore().doc(payload.docPath).update({"transaction_status": "pending"});
 
-  axios.post(`https://73a5-111-65-58-112.ap.ngrok.io/checklisting/${listingid}`, {
+  axios.post(`https://da75-119-234-8-177.ap.ngrok.io/checklisting/${listingid}`, {
     "listing_id": listingid,
   })
       .then((response) => {
